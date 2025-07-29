@@ -4,7 +4,7 @@ import com.company.newseat.category.domain.Category;
 import com.company.newseat.category.repository.CategoryRepository;
 import com.company.newseat.global.exception.GeneralException;
 import com.company.newseat.global.exception.code.status.ErrorStatus;
-import com.company.newseat.global.exception.handler.AuthHandler;
+import com.company.newseat.global.exception.handler.UserHandler;
 import com.company.newseat.global.util.DataInit;
 import com.company.newseat.user.domain.CategoryPreference;
 import com.company.newseat.user.domain.User;
@@ -35,13 +35,13 @@ public class CategoryPreferenceInitializer implements ApplicationRunner {
             log.info("[CategoryPreference] 카테고리 선호 더미 데이터 존재");
         } else {
             User guest = userRepository.findById(1L)
-                    .orElseThrow(() -> new AuthHandler(ErrorStatus.MEMBER_NOT_FOUND));
+                    .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
 
             User user = userRepository.findById(2L)
-                    .orElseThrow(() -> new AuthHandler(ErrorStatus.MEMBER_NOT_FOUND));
+                    .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
 
             User admin = userRepository.findById(3L)
-                    .orElseThrow(() -> new AuthHandler(ErrorStatus.MEMBER_NOT_FOUND));
+                    .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
 
             // 카테고리 ID 리스트
             List<Long> categoryIds = List.of(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L);
