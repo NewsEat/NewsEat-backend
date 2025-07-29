@@ -23,4 +23,19 @@ public class CategoryPreference {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public static CategoryPreference of(User user, Category category) {
+        CategoryPreference preference = new CategoryPreference();
+        preference.setUser(user);
+        preference.setCategory(category);
+        return preference;
+    }
 }
