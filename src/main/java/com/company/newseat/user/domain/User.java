@@ -1,8 +1,9 @@
 package com.company.newseat.user.domain;
 
 import com.company.newseat.bookmark.domain.Bookmark;
-import com.company.newseat.global.domain.BaseTimeEntity;
 import com.company.newseat.newslog.domain.NewsLog;
+import com.company.newseat.user.domain.type.Provider;
+import com.company.newseat.user.domain.type.Role;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -32,6 +33,14 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "provider", nullable = false)
+    private Provider provider;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
+
     @Column(name = "is_detox")
     private Boolean isDetox;
 
@@ -44,12 +53,13 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NewsLog> newsLogs = new ArrayList<>();
 
-
     @Builder
-    public User(String nickname, String email, String password, Boolean isDetox) {
+    public User(String nickname, String email, String password, Boolean isDetox,  Provider provider, Role role) {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.isDetox = isDetox;
+        this.provider = provider;
+        this.role = role;
     }
 }
