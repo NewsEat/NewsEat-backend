@@ -24,7 +24,16 @@ public enum ErrorStatus implements BaseErrorCode {
     JWT_INVALID(UNAUTHORIZED, "AUTH4012", "유효하지 않거나 거부된 토큰입니다."),
     LOGIN_FAILED_INCORRECT_PASSWORD(UNAUTHORIZED,"AUTH4013", "비밀번호가 일치하지 않습니다."),
 
+    EMAIL_INVALID_FORMAT(BAD_REQUEST, "AUTH4001", "이메일 형식이 유효하지 않습니다."),
+    EMAIL_ALREADY_EXISTS(BAD_REQUEST, "AUTH4002", "이미 가입된 이메일입니다."),
+    EMAIL_NOT_VERIFIED(BAD_REQUEST, "AUTH4003", "이메일을 인증 받지 않았습니다."),
+    EMAIL_VERIFICATION_CODE_INVALID(BAD_REQUEST, "AUTH4004", "이메일 인증번호가 틀렸습니다."),
+    EMAIL_VERIFICATION_EXPIRED(BAD_REQUEST, "AUTH4005", "이메일 인증 유효시간이 만료되었습니다."),
+
     ACCESS_DENIED(FORBIDDEN, "AUTH4031", "접근 권한이 없습니다."),
+
+    // Mail
+    EMAIL_SEND_FAILED(INTERNAL_SERVER_ERROR, "MAIL5001","이메일 전송에 실패했습니다."),
 
     // User
     USER_NICKNAME_REQUIRED(BAD_REQUEST, "USER4001", "닉네임은 필수 항목입니다."),
