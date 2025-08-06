@@ -1,5 +1,6 @@
 package com.company.newseat.user.repository.init;
 
+import com.company.newseat.global.domain.type.Status;
 import com.company.newseat.global.util.DataInit;
 import com.company.newseat.user.domain.User;
 import com.company.newseat.user.domain.type.Provider;
@@ -40,6 +41,7 @@ public class UserInitializer implements ApplicationRunner {
                     .role(Role.GUEST)
                     .nickname("guest")
                     .isDetox(false)
+                    .status(Status.ACTIVE)
                     .build();
 
             User DUMMY_USER = User.builder()
@@ -49,6 +51,7 @@ public class UserInitializer implements ApplicationRunner {
                     .role(Role.USER)
                     .nickname("user")
                     .isDetox(true)
+                    .status(Status.ACTIVE)
                     .build();
 
             User DUMMY_ADMIN = User.builder()
@@ -58,6 +61,7 @@ public class UserInitializer implements ApplicationRunner {
                     .role(Role.ADMIN)
                     .nickname("admin")
                     .isDetox(false)
+                    .status(Status.ACTIVE)
                     .build();
 
             memberList.add(DUMMY_GUEST);

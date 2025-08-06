@@ -1,6 +1,7 @@
 package com.company.newseat.user.domain;
 
 import com.company.newseat.bookmark.domain.Bookmark;
+import com.company.newseat.global.domain.type.Status;
 import com.company.newseat.newslog.domain.NewsLog;
 import com.company.newseat.user.domain.type.Provider;
 import com.company.newseat.user.domain.type.Role;
@@ -44,6 +45,11 @@ public class User {
     @Column(name = "is_detox")
     private Boolean isDetox;
 
+    @Getter
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private Status status = Status.ACTIVE;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Bookmark> bookmarkList = new ArrayList<>();
 
@@ -54,12 +60,13 @@ public class User {
     private List<NewsLog> newsLogs = new ArrayList<>();
 
     @Builder
-    public User(String nickname, String email, String password, Boolean isDetox,  Provider provider, Role role) {
+    public User(String nickname, String email, String password, Boolean isDetox,  Provider provider, Role role, Status status) {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.isDetox = isDetox;
         this.provider = provider;
         this.role = role;
+        this.status = status;
     }
 }
