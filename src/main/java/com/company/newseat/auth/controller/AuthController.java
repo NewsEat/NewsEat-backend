@@ -1,11 +1,12 @@
 package com.company.newseat.auth.controller;
 
 import com.company.newseat.auth.application.AuthService;
+import com.company.newseat.auth.dto.request.VerifyEmailCodeRequest ;
 import com.company.newseat.auth.dto.request.LoginRequest;
+import com.company.newseat.auth.dto.request.SendEmailCodeRequest;
 import com.company.newseat.auth.dto.request.SignUpRequest;
-import com.company.newseat.auth.dto.response.LoginResponse;
-import com.company.newseat.auth.dto.response.ReissueResponse;
-import com.company.newseat.auth.dto.response.SignUpResponse;
+import com.company.newseat.auth.dto.response.*;
+import com.company.newseat.email.domain.EmailAuth;
 import com.company.newseat.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,7 +31,7 @@ public class AuthController {
     @Operation(summary = "회원가입", description = "회원가입")
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<SignUpResponse>> signUp(
-            @Valid @RequestBody SignUpRequest request) {
+            @RequestBody @Valid SignUpRequest request) {
 
         SignUpResponse signUpResponse = authService.signUp(request);
 
@@ -40,7 +41,7 @@ public class AuthController {
     @Operation(summary = "로그인", description = "로그인")
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponse>> login(
-            @Valid @RequestBody LoginRequest request, HttpServletResponse response) {
+            @RequestBody @Valid LoginRequest request, HttpServletResponse response) {
 
         LoginResponse loginResponse = authService.login(request, response);
 
@@ -71,5 +72,27 @@ public class AuthController {
     @GetMapping("/tokens/test/{userId}")
     public String testToken(@PathVariable Long userId) {
         return authService.getTestToken(userId);
+    }
+
+    @Operation(summary = "인증 이메일 전송", description = "인증 이메일 전송")
+    @PostMapping("/email")
+    public ResponseEntity<ApiResponse<SendEmailCodeResponse>> sendCodeMail(
+            @RequestBody @Valid SendEmailCodeRequest request) {
+
+        EmailAuth emailAuth = authService.sendCodeMail(request);
+        SendEmailCodeResponse response = SendEmailCodeResponse.of(emailAuth);
+
+        return  ResponseEntity.ok(ApiResponse.onSuccess(response));
+    }
+
+    @Operation(summary = "이메일 인증 확인", description = "이메일 인증 확인")
+    @PostMapping("/email/check")
+    public ResponseEntity<ApiResponse<VerifyEmailCodeResponse>> checkCodeMail(
+            @RequestBody @Valid VerifyEmailCodeRequest request) {
+
+        boolean isChecked = authService.verifyEmailCode(request);
+        VerifyEmailCodeResponse response = VerifyEmailCodeResponse.of(isChecked);
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
 }

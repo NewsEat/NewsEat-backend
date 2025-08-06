@@ -1,5 +1,6 @@
 package com.company.newseat.auth.dto.request;
 
+import com.company.newseat.global.domain.type.Status;
 import com.company.newseat.global.validation.annotation.ValidCategoryIdRange;
 import com.company.newseat.user.domain.User;
 import jakarta.validation.constraints.*;
@@ -11,6 +12,9 @@ import static com.company.newseat.user.domain.type.Provider.SELF;
 import static com.company.newseat.user.domain.type.Role.USER;
 
 public record SignUpRequest(
+        @NotNull
+        Long emailAuthId,
+
         @NotBlank(message = "이메일은 필수 입력값입니다")
         @Email(message = "이메일 형식을 맞춰주세요")
         String email,
@@ -37,6 +41,7 @@ public record SignUpRequest(
                 .nickname(nickname)
                 .role(USER)
                 .isDetox(false)
+                .status(Status.ACTIVE)
                 .build();
     }
 }
