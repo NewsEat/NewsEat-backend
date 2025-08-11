@@ -22,7 +22,7 @@ public class News extends BaseTimeEntity {
     private String title;
 
     @Lob
-    @Column(name = "content")
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "publisher")
