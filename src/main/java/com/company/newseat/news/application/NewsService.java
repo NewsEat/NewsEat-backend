@@ -9,14 +9,9 @@ import com.company.newseat.news.repository.NewsRepository;
 import com.company.newseat.news.util.NewsSummaryPromptProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.chat.messages.UserMessage;
-import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.chat.model.Generation;
-import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.stereotype.Service;
 import org.springframework.ai.openai.OpenAiChatModel;
 
-import java.util.Collections;
 
 @Slf4j
 @Service
@@ -53,17 +48,11 @@ public class NewsService {
     }
 
     private String generateSummaryFromContent(String content) {
-
         String promptText = promptProvider.createPrompt(content);
-        Prompt prompt = new Prompt(Collections.singletonList(new UserMessage(promptText)));
-        ChatResponse response;
         try {
-            response = openAiChatModel.call(prompt);
+            return openAiChatModel.call(promptText);
         } catch (Exception e) {
             throw new NewsHandler(ErrorStatus.SUMMARY_GENERATION_FAILED);
         }
-        Generation generation = response.getResult();
-
-        return generation.getOutput().getText();
     }
 }
