@@ -42,7 +42,15 @@ public enum ErrorStatus implements BaseErrorCode {
     USER_NOT_FOUND(NOT_FOUND, "USER4041", "사용자를 찾을 수 없습니다."),
 
     // Category
-    CATEGORY_NOT_FOUND(NOT_FOUND, "CATEGORY4041", "카테고리 정보를 찾을 수 없습니다.");
+    CATEGORY_NOT_FOUND(NOT_FOUND, "CATEGORY4041", "카테고리 정보를 찾을 수 없습니다."),
+
+    // News
+    NEWS_NOT_FOUND(NOT_FOUND, "NEWS4004", "해당 뉴스를 찾을 수 없습니다."),
+
+    SUMMARY_GENERATION_FAILED(INTERNAL_SERVER_ERROR, "NEWS5001", "뉴스 요약 생성에 실패했습니다."),
+    SUMMARY_REQUEST_INVALID(BAD_REQUEST, "NEWS4001", "뉴스 요약 요청 데이터가 유효하지 않습니다."),
+    SUMMARY_CONTENT_EMPTY(BAD_REQUEST, "NEWS4003", "뉴스 내용이 비어 있습니다."),
+    SUMMARY_SERVICE_UNAVAILABLE(SERVICE_UNAVAILABLE, "NEWS5031", "뉴스 요약 서비스를 일시적으로 사용할 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
