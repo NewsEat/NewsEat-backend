@@ -4,12 +4,11 @@ import com.company.newseat.news.domain.type.Sentiment;
 import com.company.newseat.category.domain.Category;
 import com.company.newseat.global.domain.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-
+@Builder
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class News extends BaseTimeEntity {
@@ -23,7 +22,7 @@ public class News extends BaseTimeEntity {
     private String title;
 
     @Lob
-    @Column(name = "content")
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "publisher")
