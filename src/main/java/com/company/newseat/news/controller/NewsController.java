@@ -4,6 +4,7 @@ import com.company.newseat.global.response.ApiResponse;
 import com.company.newseat.news.application.NewsService;
 import com.company.newseat.news.dto.request.NewsSummaryRequest;
 import com.company.newseat.news.dto.response.NewsSummaryResponse;
+import com.company.newseat.news.dto.response.SearchNewsResponseList;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,19 @@ public class NewsController {
             @RequestBody NewsSummaryRequest request) {
 
         NewsSummaryResponse response = newsService.summarizeNewsByContent(request);
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+    }
+
+    @Operation(summary = "뉴스 검색 (커서 기반 무한 스크롤)",
+            description = "키워드를 기준으로 뉴스 제목과 내용을 검색, lastNewsId를 기준으로 다음 페이지 데이터 조회")
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<SearchNewsResponseList>> searchNews(
+            @RequestParam String keyword,
+            @RequestParam(required = false) Long lastNewsId,
+            @RequestParam(defaultValue = "10") int size) {
+
+        SearchNewsResponseList response = newsService.searchNews(keyword, lastNewsId, size);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
