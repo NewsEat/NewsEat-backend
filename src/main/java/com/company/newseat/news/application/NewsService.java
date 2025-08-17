@@ -5,12 +5,16 @@ import com.company.newseat.global.exception.handler.NewsHandler;
 import com.company.newseat.news.domain.News;
 import com.company.newseat.news.dto.request.NewsSummaryRequest;
 import com.company.newseat.news.dto.response.NewsSummaryResponse;
+import com.company.newseat.news.dto.response.SearchNewsResponse;
+import com.company.newseat.news.dto.response.SearchNewsResponseList;
 import com.company.newseat.news.repository.NewsRepository;
 import com.company.newseat.news.util.NewsSummaryPromptProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.ai.openai.OpenAiChatModel;
+
+import java.util.List;
 
 
 @Slf4j
@@ -54,5 +58,22 @@ public class NewsService {
         } catch (Exception e) {
             throw new NewsHandler(ErrorStatus.SUMMARY_GENERATION_FAILED);
         }
+    }
+
+    /**
+     * 키워드로 뉴스 검색
+     */
+    public SearchNewsResponseList searchNews(String keyword, Long lastNewsId, int size) {
+
+        List<News> newsList = newsRepository.searchByKeywordWithCursor(keyword, lastNewsId, size);
+
+        boolean hasMore = newsList.size() > size;
+
+        List<SearchNewsResponse> list = newsList.stream()
+                .limit(size)
+                .map(SearchNewsResponse::of)
+                .toList();
+
+        return SearchNewsResponseList.of(list, hasMore);
     }
 }
