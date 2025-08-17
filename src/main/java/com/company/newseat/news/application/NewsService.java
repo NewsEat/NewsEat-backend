@@ -34,21 +34,13 @@ public class NewsService {
         News news = newsRepository.findById(newsId)
                 .orElseThrow(() -> new NewsHandler(ErrorStatus.NEWS_NOT_FOUND));
 
+        String title = news.getTitle();
+        String sentiment = news.getSentiment().getDescription();
+
         String newsContent = news.getContent();
         String summaryText = generateSummaryFromContent(newsContent);
 
-        return new NewsSummaryResponse(summaryText);
-    }
-
-    /**
-     * open ai 이용한 뉴스 요약 by content
-     */
-    public NewsSummaryResponse summarizeNewsByContent(NewsSummaryRequest request) {
-
-        String newsContent = request.newsContent();
-        String summaryText = generateSummaryFromContent(newsContent);
-
-        return new NewsSummaryResponse(summaryText);
+        return new NewsSummaryResponse(title, sentiment, summaryText);
     }
 
     private String generateSummaryFromContent(String content) {
