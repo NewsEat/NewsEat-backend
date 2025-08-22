@@ -2,7 +2,6 @@ package com.company.newseat.news.controller;
 
 import com.company.newseat.global.response.ApiResponse;
 import com.company.newseat.news.application.NewsService;
-import com.company.newseat.news.dto.request.NewsSummaryRequest;
 import com.company.newseat.news.dto.response.NewsSummaryResponse;
 import com.company.newseat.news.dto.response.SearchNewsResponseList;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,16 +26,6 @@ public class NewsController {
             @PathVariable Long newsId) {
 
         NewsSummaryResponse response = newsService.summarizeNewsById(newsId);
-
-        return ResponseEntity.ok(ApiResponse.onSuccess(response));
-    }
-
-    @Operation(summary = "뉴스 요약", description = "뉴스 본문 내용을 받아 AI를 활용해 뉴스 요약 생성")
-    @PostMapping("/summary")
-    public ResponseEntity<ApiResponse<NewsSummaryResponse>> summarizeNewsByContent(
-            @RequestBody NewsSummaryRequest request) {
-
-        NewsSummaryResponse response = newsService.summarizeNewsByContent(request);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
