@@ -23,7 +23,7 @@ public class GlobalController {
 
     @Operation(summary = "health check", description = "배포 및 서비스 상태 확인을 위한 API")
     @GetMapping("/health-check")
-    public ResponseEntity<ApiResponse<String>> healthCheck() {
-        return ResponseEntity.ok(ApiResponse.onSuccess(env));
+    public ResponseEntity<?> healthCheck() {
+        return ResponseEntity.ok(env);
     }
 }
