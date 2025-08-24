@@ -24,6 +24,7 @@ jobs:
       # 설정 파일 생성
       - name: application yml setting
         run: |
+          echo ${{ secrets.APPLICATION_LOCALSECRET }} | base64 --decode > ./src/main/resources/application-localsecret.yml
           echo ${{ secrets.APPLICATION_SECRET }} | base64 --decode > ./src/main/resources/application-secret.yml
 
       # Gradle 실행권한 부여
