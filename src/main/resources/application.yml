@@ -1,17 +1,48 @@
 spring:
   profiles:
-    active: local, secret
+    active: local
+    group:
+      local: local, localsecret
+      blue: blue, secret
+      green: green, secret
 
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/newseat
-    username: root
-    password: root
+server:
+  env: blue
 
-  jpa:
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        format_sql: true
-        show_sql: true
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
+server:
+  port: 8080
+  serverAddress: localhost
+
+serverName: local_server
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: blue
+
+server:
+  port: 8080
+  serverAddress: 35.224.167.246
+
+serverName: blue_server
+
+---
+spring:
+  config:
+    activate:
+      on-profile: green
+
+server:
+  port: 8081
+  serverAddress: 35.224.167.246
+
+serverName: green_server
