@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Profile({"local", "dev", "prod"})
+@Profile({"local", "blue", "green"})
 @Transactional
 @Component
 public @interface DataInit {
