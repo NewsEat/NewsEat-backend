@@ -3,7 +3,7 @@ package com.company.newseat.user.application;
 import com.company.newseat.global.exception.code.status.ErrorStatus;
 import com.company.newseat.global.exception.handler.UserHandler;
 import com.company.newseat.user.domain.User;
-import com.company.newseat.user.dto.MypageProfileResponse;
+import com.company.newseat.user.dto.response.MypageProfileResponse;
 import com.company.newseat.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,5 +42,16 @@ public class UserService {
                 .toList();
 
         return new MypageProfileResponse(user.getNickname(), categories);
+    }
+
+    /**
+     * 마이페이지에서 닉네임 변경
+     */
+    @Transactional
+    public void updateNickname(Long userId, String newNickname) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+
+        user.changeNickname(newNickname);
     }
 }

@@ -69,4 +69,8 @@ public class User {
         this.role = role;
         this.status = status;
     }
+
+    public void changeNickname(String newNickname) {
+        this.nickname = newNickname;
+    }
 }
