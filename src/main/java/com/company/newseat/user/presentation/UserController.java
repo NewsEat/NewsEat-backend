@@ -2,6 +2,7 @@ package com.company.newseat.user.presentation;
 
 import com.company.newseat.global.response.ApiResponse;
 import com.company.newseat.user.application.UserService;
+import com.company.newseat.user.dto.request.UpdateCategoryRequest;
 import com.company.newseat.user.dto.request.UpdateNicknameRequest;
 import com.company.newseat.user.dto.response.MypageProfileResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,6 +40,19 @@ public class UserController {
             @RequestBody @Valid UpdateNicknameRequest request) {
 
         userService.updateNickname(userId, request.nickname());
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(null));
+    }
+
+    @Operation(summary = "마이페이지 관심 카테고리 수정",
+            description = "관심 카테고리는 최소 1개, 최대 3개까지 선택 가능 <br>" +
+                    "카테고리: 정치(1), 경제(2), 사회(3), 생활/문화(4), IT/과학(5), 연예(6), 스포츠(7), 세계(8)")
+    @PutMapping("/categories")
+    public ResponseEntity<ApiResponse<Void>> updateCategories(
+            @AuthenticationPrincipal Long userId,
+            @RequestBody @Valid UpdateCategoryRequest request) {
+
+        userService.updateCategories(userId, request.categoryIds());
 
         return ResponseEntity.ok(ApiResponse.onSuccess(null));
     }
