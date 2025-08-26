@@ -1,4 +1,4 @@
-package com.company.newseat.user.dto;
+package com.company.newseat.user.dto.response;
 
 import java.util.List;
 
