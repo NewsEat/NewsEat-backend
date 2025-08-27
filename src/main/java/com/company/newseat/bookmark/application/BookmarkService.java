@@ -47,4 +47,13 @@ public class BookmarkService {
         return bookmark.getBookmarkId();
     }
 
+    @Transactional
+    public void deleteBookmark(Long userId, Long bookmarkId) {
+        Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
+                .filter(b -> b.getUser().getUserId().equals(userId))
+                .orElseThrow(() -> new BookmarkHandler(ErrorStatus.BOOKMARK_NOT_FOUND));
+
+        bookmarkRepository.delete(bookmark);
+    }
+
 }
