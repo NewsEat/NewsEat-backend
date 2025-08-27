@@ -45,6 +45,7 @@ public enum ErrorStatus implements BaseErrorCode {
     CATEGORY_NOT_FOUND(NOT_FOUND, "CATEGORY4041", "카테고리 정보를 찾을 수 없습니다."),
 
     // Bookmark
+    BOOKMARK_NOT_FOUND(NOT_FOUND, "BOOKMARK4041", "북마크를 찾을 수 없습니다."),
     BOOKMARK_ALREADY_EXISTS(CONFLICT, "BOOKMARK4091", "이미 북마크된 뉴스입니다."),
 
     // News
