@@ -1,6 +1,7 @@
 package com.company.newseat.bookmark.application;
 
 import com.company.newseat.bookmark.domain.Bookmark;
+import com.company.newseat.bookmark.dto.response.BookmarkResponse;
 import com.company.newseat.bookmark.repository.BookmarkRepository;
 import com.company.newseat.global.exception.code.status.ErrorStatus;
 import com.company.newseat.global.exception.handler.BookmarkHandler;
@@ -47,6 +48,9 @@ public class BookmarkService {
         return bookmark.getBookmarkId();
     }
 
+    /**
+     * 북마크에서 삭제
+     */
     @Transactional
     public void deleteBookmark(Long userId, Long bookmarkId) {
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
@@ -54,6 +58,17 @@ public class BookmarkService {
                 .orElseThrow(() -> new BookmarkHandler(ErrorStatus.BOOKMARK_NOT_FOUND));
 
         bookmarkRepository.delete(bookmark);
+    }
+
+    /**
+     * 북마크한 뉴스 단건 조회
+     */
+    public BookmarkResponse getBookmark(Long userId, Long bookmarkId) {
+        Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
+                .filter(b -> b.getUser().getUserId().equals(userId))
+                .orElseThrow(() -> new BookmarkHandler(ErrorStatus.BOOKMARK_NOT_FOUND));
+
+        return BookmarkResponse.from(bookmark);
     }
 
 }

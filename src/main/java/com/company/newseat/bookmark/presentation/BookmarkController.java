@@ -3,6 +3,7 @@ package com.company.newseat.bookmark.presentation;
 import com.company.newseat.bookmark.application.BookmarkService;
 import com.company.newseat.bookmark.dto.request.AddBookmarkRequest;
 import com.company.newseat.bookmark.dto.response.AddBookmarkResponse;
+import com.company.newseat.bookmark.dto.response.BookmarkResponse;
 import com.company.newseat.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,5 +45,16 @@ public class BookmarkController {
         bookmarkService.deleteBookmark(userId, bookmarkId);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(null));
+    }
+
+    @Operation(summary = "북마크 단건 조회", description = "사용자가 북마크한 뉴스 단건 조회")
+    @GetMapping("/{bookmarkId}")
+    public ResponseEntity<ApiResponse<BookmarkResponse>> getBookmark(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long bookmarkId) {
+
+        BookmarkResponse response = bookmarkService.getBookmark(userId, bookmarkId);
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
 }
