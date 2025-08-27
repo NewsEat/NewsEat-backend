@@ -30,7 +30,7 @@ public class BookmarkService {
      * (원본 뉴스 데이터를 스냅샷 형태로 Bookmark 엔티티에 저장)
      */
     @Transactional
-    public void addBookmark(Long userId, Long newsId) {
+    public Long addBookmark(Long userId, Long newsId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
 
@@ -43,6 +43,8 @@ public class BookmarkService {
 
         Bookmark bookmark = Bookmark.fromNews(news, user);
         bookmarkRepository.save(bookmark);
+
+        return bookmark.getBookmarkId();
     }
 
 }

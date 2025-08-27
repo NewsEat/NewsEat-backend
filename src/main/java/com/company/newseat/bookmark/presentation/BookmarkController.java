@@ -2,6 +2,7 @@ package com.company.newseat.bookmark.presentation;
 
 import com.company.newseat.bookmark.application.BookmarkService;
 import com.company.newseat.bookmark.dto.request.AddBookmarkRequest;
+import com.company.newseat.bookmark.dto.response.AddBookmarkResponse;
 import com.company.newseat.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,12 +24,14 @@ public class BookmarkController {
 
     @Operation(summary = "북마크 추가", description = "뉴스를 북마크에 추가")
     @PostMapping("/{newsId}")
-    public ResponseEntity<ApiResponse<Void>> createBookmark(
+    public ResponseEntity<ApiResponse<AddBookmarkResponse>> createBookmark(
             @AuthenticationPrincipal Long userId,
             @RequestBody @Valid AddBookmarkRequest request) {
 
-        bookmarkService.addBookmark(userId, request.newsId());
+        Long bookmarkId = bookmarkService.addBookmark(userId, request.newsId());
 
-        return ResponseEntity.ok(ApiResponse.onSuccess(null));
+        AddBookmarkResponse response = new AddBookmarkResponse(bookmarkId);
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
 }
