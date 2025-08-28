@@ -2,6 +2,8 @@ package com.company.newseat.bookmark.application;
 
 import com.company.newseat.bookmark.domain.Bookmark;
 import com.company.newseat.bookmark.dto.response.BookmarkResponse;
+import com.company.newseat.bookmark.dto.response.BookmarkSimpleResponse;
+import com.company.newseat.bookmark.dto.response.BookmarkSimpleResponseList;
 import com.company.newseat.bookmark.repository.BookmarkRepository;
 import com.company.newseat.global.exception.code.status.ErrorStatus;
 import com.company.newseat.global.exception.handler.BookmarkHandler;
@@ -15,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -69,6 +73,22 @@ public class BookmarkService {
                 .orElseThrow(() -> new BookmarkHandler(ErrorStatus.BOOKMARK_NOT_FOUND));
 
         return BookmarkResponse.from(bookmark);
+    }
+
+    /**
+     * 북마크 리스트 조회 (커서 기반)
+     */
+    public BookmarkSimpleResponseList getBookmarkList(Long userId, Long lastBookmarkId, int size) {
+        List<Bookmark> bookmarks = bookmarkRepository.findBookmarksByUserWithCursor(userId, lastBookmarkId, size);
+
+        boolean hasMore = bookmarks.size() > size;
+
+        List<BookmarkSimpleResponse> list = bookmarks.stream()
+                .limit(size)
+                .map(BookmarkSimpleResponse::of)
+                .toList();
+
+        return BookmarkSimpleResponseList.of(list, hasMore);
     }
 
 }
