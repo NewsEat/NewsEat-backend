@@ -23,6 +23,9 @@ public class Category {
     @Column(name = "name", length = 50)
     private String name;
 
+    @Column(name = "code", length = 10, unique = true)
+    private String code;
+
     @Column(name = "order_index")
     private int orderIndex;
 
@@ -30,8 +33,9 @@ public class Category {
     private List<News> newsList = new ArrayList<>();
 
     @Builder
-    public Category(String name, int orderIndex) {
+    public Category(String name, String code, int orderIndex) {
         this.name = name;
+        this.code = code;
         this.orderIndex = orderIndex;
     }
 }
