@@ -2,6 +2,7 @@ package com.company.newseat.news.controller;
 
 import com.company.newseat.global.response.ApiResponse;
 import com.company.newseat.news.application.NewsService;
+import com.company.newseat.news.dto.response.CategoryNewsResponseList;
 import com.company.newseat.news.dto.response.NewsSummaryResponse;
 import com.company.newseat.news.dto.response.SearchNewsResponseList;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,6 +40,20 @@ public class NewsController {
             @RequestParam(defaultValue = "10") int size) {
 
         SearchNewsResponseList response = newsService.searchNews(keyword, lastNewsId, size);
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+    }
+
+
+    @Operation(summary = "카테고리별 뉴스 조회 기능",
+            description = "카테고리별 뉴스 조회")
+    @GetMapping
+    public ResponseEntity<ApiResponse<CategoryNewsResponseList>> getNewsByCategory(
+            @RequestParam(defaultValue = "경제") String category,
+            @RequestParam(required = false) Long lastNewsId,
+            @RequestParam(defaultValue = "10") int size){
+
+        CategoryNewsResponseList response = newsService.getCategoryNews(category, lastNewsId, size);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
