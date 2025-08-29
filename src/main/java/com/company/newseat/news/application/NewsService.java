@@ -4,9 +4,7 @@ import com.company.newseat.global.exception.code.status.ErrorStatus;
 import com.company.newseat.global.exception.handler.NewsHandler;
 import com.company.newseat.news.domain.News;
 import com.company.newseat.news.dto.request.NewsSummaryRequest;
-import com.company.newseat.news.dto.response.NewsSummaryResponse;
-import com.company.newseat.news.dto.response.SearchNewsResponse;
-import com.company.newseat.news.dto.response.SearchNewsResponseList;
+import com.company.newseat.news.dto.response.*;
 import com.company.newseat.news.repository.NewsRepository;
 import com.company.newseat.news.util.NewsSummaryPromptProvider;
 import lombok.RequiredArgsConstructor;
@@ -67,5 +65,22 @@ public class NewsService {
                 .toList();
 
         return SearchNewsResponseList.of(list, hasMore);
+    }
+
+    /**
+     * 카테고리별 뉴스 목록 조회
+     */
+    public CategoryNewsResponseList getCategoryNews(String categoryName, Long lastNewsId, int size) {
+
+        List<News> newsList = newsRepository.findByCategoryWithCursor(categoryName, lastNewsId, size);
+
+        boolean hasMore = newsList.size() > size;
+
+        List<CategoryNewsResponse> list = newsList.stream()
+                .limit(size)
+                .map(CategoryNewsResponse::of)
+                .toList();
+
+        return CategoryNewsResponseList.of(list, hasMore);
     }
 }
