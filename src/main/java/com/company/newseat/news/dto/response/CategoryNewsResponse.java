@@ -1,5 +1,6 @@
 package com.company.newseat.news.dto.response;
 
+import com.company.newseat.global.util.DateUtil;
 import com.company.newseat.news.domain.News;
 
 public record CategoryNewsResponse(
@@ -10,12 +11,14 @@ public record CategoryNewsResponse(
         String publishedAt
 ) {
     public static CategoryNewsResponse of(News news) {
+        String formattedPublishedAt = DateUtil.formatDate(news.getPublished_at());
+
         return new CategoryNewsResponse(
                 news.getNewsId(),
                 news.getTitle(),
                 news.getImgUrl(),
                 news.getPublisher(),
-                news.getPublished_at()
+                formattedPublishedAt
         );
     }
 }
