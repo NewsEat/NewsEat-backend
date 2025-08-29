@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.company.newseat.category.domain.QCategory.category;
 import static com.company.newseat.news.domain.QNews.news;
 
 @RequiredArgsConstructor
@@ -30,6 +31,23 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
                                "lower(cast({0} as char))", news.title)
                                .like("%" + lowerKeyword + "%"))
                 )
+                .orderBy(news.newsId.desc())
+                .limit(size + 1);
+
+        if (lastNewsId != null && lastNewsId != 0) {
+            query.where(news.newsId.lt(lastNewsId));
+        }
+
+        return query.fetch();
+    }
+
+
+    @Override
+    public List<News> findByCategoryWithCursor(String categoryCode, Long lastNewsId, int size) {
+        var query = queryFactory
+                .selectFrom(news)
+                .join(news.category, category).fetchJoin()
+                .where(category.code.eq(categoryCode))
                 .orderBy(news.newsId.desc())
                 .limit(size + 1);
 
