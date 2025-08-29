@@ -29,34 +29,42 @@ public class CategoryInitializer implements ApplicationRunner {
 
             Category CATEGORY_POLITICS = Category.builder()
                     .name("정치")
+                    .code("001")
                     .orderIndex(1)
                     .build();
             Category CATEGORY_ECONOMY = Category.builder()
                     .name("경제")
+                    .code("002")
                     .orderIndex(2)
                     .build();
             Category CATEGORY_SOCIETY = Category.builder()
                     .name("사회")
+                    .code("003")
                     .orderIndex(3)
                     .build();
             Category CATEGORY_LIFESTYLE_CULTURE = Category.builder()
                     .name("생활/문화")
+                    .code("004")
                     .orderIndex(4)
                     .build();
             Category CATEGORY_TECH_SCIENCE = Category.builder()
                     .name("IT/과학")
+                    .code("005")
                     .orderIndex(5)
                     .build();
             Category CATEGORY_ENTERTAINMENT = Category.builder()
                     .name("연예")
+                    .code("006")
                     .orderIndex(6)
                     .build();
             Category CATEGORY_SPORTS = Category.builder()
                     .name("스포츠")
+                    .code("007")
                     .orderIndex(7)
                     .build();
             Category CATEGORY_WORLD = Category.builder()
                     .name("세계")
+                    .code("008")
                     .orderIndex(8)
                     .build();
 

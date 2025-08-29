@@ -43,11 +43,11 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 
 
     @Override
-    public List<News> findByCategoryWithCursor(String categoryName, Long lastNewsId, int size) {
+    public List<News> findByCategoryWithCursor(String categoryCode, Long lastNewsId, int size) {
         var query = queryFactory
                 .selectFrom(news)
                 .join(news.category, category).fetchJoin()
-                .where(category.name.eq(categoryName))
+                .where(category.code.eq(categoryCode))
                 .orderBy(news.newsId.desc())
                 .limit(size + 1);
 

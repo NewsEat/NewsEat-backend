@@ -46,15 +46,16 @@ public class NewsController {
 
 
     @Operation(summary = "카테고리별 뉴스 조회 기능",
-            description = "카테고리별 뉴스 조회")
-    @GetMapping
-    public ResponseEntity<ApiResponse<CategoryNewsResponseList>> getNewsByCategory(
-            @RequestParam(defaultValue = "경제") String category,
-            @RequestParam(required = false) Long lastNewsId,
-            @RequestParam(defaultValue = "10") int size){
-
-        CategoryNewsResponseList response = newsService.getCategoryNews(category, lastNewsId, size);
-
-        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+            description = "카테고리별 뉴스 조회 <br>" +
+            "카테고리 코드: 정치(001), 경제(002), 사회(003), 생활/문화(004), IT/과학(005), 연예(006), 스포츠(007),세계(008)")
+        @GetMapping
+        public ResponseEntity<ApiResponse<CategoryNewsResponseList>> getNewsByCategory(
+                @RequestParam(defaultValue = "001") String category,
+                @RequestParam(required = false) Long lastNewsId,
+                @RequestParam(defaultValue = "10") int size){
+    
+            CategoryNewsResponseList response = newsService.getCategoryNews(category, lastNewsId, size);
+    
+            return ResponseEntity.ok(ApiResponse.onSuccess(response));
+        }
     }
-}
