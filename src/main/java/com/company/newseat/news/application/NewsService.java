@@ -3,7 +3,6 @@ package com.company.newseat.news.application;
 import com.company.newseat.global.exception.code.status.ErrorStatus;
 import com.company.newseat.global.exception.handler.NewsHandler;
 import com.company.newseat.news.domain.News;
-import com.company.newseat.news.dto.request.NewsSummaryRequest;
 import com.company.newseat.news.dto.response.*;
 import com.company.newseat.news.repository.NewsRepository;
 import com.company.newseat.news.util.NewsSummaryPromptProvider;
@@ -70,9 +69,9 @@ public class NewsService {
     /**
      * 카테고리별 뉴스 목록 조회
      */
-    public CategoryNewsResponseList getCategoryNews(String categoryName, Long lastNewsId, int size) {
+    public CategoryNewsResponseList getCategoryNews(String categoryCode, Long lastNewsId, int size) {
 
-        List<News> newsList = newsRepository.findByCategoryWithCursor(categoryName, lastNewsId, size);
+        List<News> newsList = newsRepository.findByCategoryWithCursor(categoryCode, lastNewsId, size);
 
         boolean hasMore = newsList.size() > size;
 
