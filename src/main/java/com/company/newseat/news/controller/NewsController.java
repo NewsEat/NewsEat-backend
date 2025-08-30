@@ -2,10 +2,10 @@ package com.company.newseat.news.controller;
 
 import com.company.newseat.global.response.ApiResponse;
 import com.company.newseat.news.application.NewsService;
-import com.company.newseat.news.dto.response.CategoryNewsResponseList;
+import com.company.newseat.news.dto.response.CategoryNewsListResponse;
 import com.company.newseat.news.dto.response.NewsDetailResponse;
 import com.company.newseat.news.dto.response.NewsSummaryResponse;
-import com.company.newseat.news.dto.response.SearchNewsResponseList;
+import com.company.newseat.news.dto.response.SearchNewsListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -36,12 +36,12 @@ public class NewsController {
     @Operation(summary = "뉴스 검색 (커서 기반 무한 스크롤)",
             description = "키워드를 기준으로 뉴스 제목과 내용을 검색, lastNewsId를 기준으로 다음 페이지 데이터 조회")
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<SearchNewsResponseList>> searchNews(
+    public ResponseEntity<ApiResponse<SearchNewsListResponse>> searchNews(
             @RequestParam String keyword,
             @RequestParam(required = false) Long lastNewsId,
             @RequestParam(defaultValue = "10") int size) {
 
-        SearchNewsResponseList response = newsService.searchNews(keyword, lastNewsId, size);
+        SearchNewsListResponse response = newsService.searchNews(keyword, lastNewsId, size);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
@@ -51,12 +51,12 @@ public class NewsController {
             description = "카테고리 코드를 기반으로 카테고리 뉴스 목록 조회 <br>" +
             "카테고리 코드: 정치(001), 경제(002), 사회(003), 생활/문화(004), IT/과학(005), 연예(006), 스포츠(007),세계(008)")
     @GetMapping
-    public ResponseEntity<ApiResponse<CategoryNewsResponseList>> getNewsByCategory(
+    public ResponseEntity<ApiResponse<CategoryNewsListResponse>> getNewsByCategory(
             @RequestParam(defaultValue = "001") String category,
             @RequestParam(required = false) Long lastNewsId,
             @RequestParam(defaultValue = "10") int size){
 
-        CategoryNewsResponseList response = newsService.getCategoryNews(category, lastNewsId, size);
+        CategoryNewsListResponse response = newsService.getCategoryNews(category, lastNewsId, size);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }

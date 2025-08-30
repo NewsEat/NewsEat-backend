@@ -58,7 +58,7 @@ public class NewsService {
     /**
      * 키워드로 뉴스 검색
      */
-    public SearchNewsResponseList searchNews(String keyword, Long lastNewsId, int size) {
+    public SearchNewsListResponse searchNews(String keyword, Long lastNewsId, int size) {
 
         List<News> newsList = newsRepository.searchByKeywordWithCursor(keyword, lastNewsId, size);
 
@@ -69,13 +69,13 @@ public class NewsService {
                 .map(SearchNewsResponse::of)
                 .toList();
 
-        return SearchNewsResponseList.of(list, hasMore);
+        return SearchNewsListResponse.of(list, hasMore);
     }
 
     /**
      * 카테고리별 뉴스 목록 조회
      */
-    public CategoryNewsResponseList getCategoryNews(String categoryCode, Long lastNewsId, int size) {
+    public CategoryNewsListResponse getCategoryNews(String categoryCode, Long lastNewsId, int size) {
 
         List<News> newsList = newsRepository.findByCategoryWithCursor(categoryCode, lastNewsId, size);
 
@@ -86,7 +86,7 @@ public class NewsService {
                 .map(CategoryNewsResponse::of)
                 .toList();
 
-        return CategoryNewsResponseList.of(list, hasMore);
+        return CategoryNewsListResponse.of(list, hasMore);
     }
 
     /**
