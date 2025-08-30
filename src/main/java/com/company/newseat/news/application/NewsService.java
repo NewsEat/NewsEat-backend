@@ -1,11 +1,15 @@
 package com.company.newseat.news.application;
 
+import com.company.newseat.bookmark.repository.BookmarkRepository;
 import com.company.newseat.global.exception.code.status.ErrorStatus;
 import com.company.newseat.global.exception.handler.NewsHandler;
+import com.company.newseat.global.exception.handler.UserHandler;
 import com.company.newseat.news.domain.News;
 import com.company.newseat.news.dto.response.*;
 import com.company.newseat.news.repository.NewsRepository;
 import com.company.newseat.news.util.NewsSummaryPromptProvider;
+import com.company.newseat.user.domain.User;
+import com.company.newseat.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +26,8 @@ public class NewsService {
     private final OpenAiChatModel openAiChatModel;
     private final NewsRepository newsRepository;
     private final NewsSummaryPromptProvider promptProvider;
+    private final BookmarkRepository bookmarkRepository;
+    private final UserRepository userRepository;
 
     /**
      * open ai 이용한 뉴스 요약 by newsId
@@ -81,5 +87,20 @@ public class NewsService {
                 .toList();
 
         return CategoryNewsResponseList.of(list, hasMore);
+    }
+
+    /**
+     * 뉴스 단건 조회
+     */
+    public NewsDetailResponse getNewsDetail(Long userId, Long newsId){
+        News news = newsRepository.findById(newsId)
+                .orElseThrow(() -> new NewsHandler(ErrorStatus.NEWS_NOT_FOUND));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+
+        boolean isBookmarked = bookmarkRepository.existsByUserAndNewsId(user, newsId);
+
+        return NewsDetailResponse.of(news, isBookmarked);
     }
 }

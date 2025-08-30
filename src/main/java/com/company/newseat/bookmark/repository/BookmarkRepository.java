@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long>, BookmarkRepositoryCustom {
     boolean existsByUserAndTitle(User user, String title);
+
+    boolean existsByUserAndNewsId(User user, Long newsId);
 }

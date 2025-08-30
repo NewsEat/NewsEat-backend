@@ -19,6 +19,9 @@ public class Bookmark {
     @Column(name = "bookmark_id")
     private Long bookmarkId;
 
+    @Column(name = "news_id")
+    private Long newsId;
+
     @Column(name = "title")
     private String title;
 
@@ -47,7 +50,8 @@ public class Bookmark {
     private User user;
 
     @Builder
-    private Bookmark(String title, String content, String publisher, Sentiment sentiment, String published_at, String imgUrl, String category, User user) {
+    private Bookmark(Long newsId, String title, String content, String publisher, Sentiment sentiment, String published_at, String imgUrl, String category, User user) {
+        this.newsId = newsId;
         this.title = title;
         this.content = content;
         this.publisher = publisher;
@@ -60,6 +64,7 @@ public class Bookmark {
 
     public static Bookmark fromNews(News news, User user) {
         return Bookmark.builder()
+                .newsId(news.getNewsId())
                 .title(news.getTitle())
                 .content(news.getContent())
                 .publisher(news.getPublisher())
