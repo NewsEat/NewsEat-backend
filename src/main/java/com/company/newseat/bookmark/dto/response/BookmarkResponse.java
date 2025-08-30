@@ -1,6 +1,7 @@
 package com.company.newseat.bookmark.dto.response;
 
 import com.company.newseat.bookmark.domain.Bookmark;
+import com.company.newseat.global.util.DateUtil;
 
 public record BookmarkResponse(
         Long bookmarkId,
@@ -13,13 +14,15 @@ public record BookmarkResponse(
         String category
 ) {
     public static BookmarkResponse from(Bookmark bookmark) {
+        String formattedPublishedAt = DateUtil.formatDate(bookmark.getPublished_at());
+
         return new BookmarkResponse(
                 bookmark.getBookmarkId(),
                 bookmark.getTitle(),
                 bookmark.getContent(),
                 bookmark.getPublisher(),
                 bookmark.getSentiment().getDescription(),
-                bookmark.getPublished_at(),
+                formattedPublishedAt,
                 bookmark.getImgUrl(),
                 bookmark.getCategory());
     }
