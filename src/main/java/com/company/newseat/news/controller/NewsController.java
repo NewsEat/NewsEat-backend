@@ -3,6 +3,7 @@ package com.company.newseat.news.controller;
 import com.company.newseat.global.response.ApiResponse;
 import com.company.newseat.news.application.NewsService;
 import com.company.newseat.news.dto.response.CategoryNewsResponseList;
+import com.company.newseat.news.dto.response.NewsDetailResponse;
 import com.company.newseat.news.dto.response.NewsSummaryResponse;
 import com.company.newseat.news.dto.response.SearchNewsResponseList;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "News", description = "뉴스 조회, 요약 API")
@@ -45,17 +47,29 @@ public class NewsController {
     }
 
 
-    @Operation(summary = "카테고리별 뉴스 조회 기능",
-            description = "카테고리별 뉴스 조회 <br>" +
+    @Operation(summary = "카테고리별 뉴스 목록 조회",
+            description = "카테고리 코드를 기반으로 카테고리 뉴스 목록 조회 <br>" +
             "카테고리 코드: 정치(001), 경제(002), 사회(003), 생활/문화(004), IT/과학(005), 연예(006), 스포츠(007),세계(008)")
-        @GetMapping
-        public ResponseEntity<ApiResponse<CategoryNewsResponseList>> getNewsByCategory(
-                @RequestParam(defaultValue = "001") String category,
-                @RequestParam(required = false) Long lastNewsId,
-                @RequestParam(defaultValue = "10") int size){
-    
-            CategoryNewsResponseList response = newsService.getCategoryNews(category, lastNewsId, size);
-    
-            return ResponseEntity.ok(ApiResponse.onSuccess(response));
-        }
+    @GetMapping
+    public ResponseEntity<ApiResponse<CategoryNewsResponseList>> getNewsByCategory(
+            @RequestParam(defaultValue = "001") String category,
+            @RequestParam(required = false) Long lastNewsId,
+            @RequestParam(defaultValue = "10") int size){
+
+        CategoryNewsResponseList response = newsService.getCategoryNews(category, lastNewsId, size);
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
+
+    @Operation(summary = "뉴스 상세 조회", description = "뉴스 ID를 기반으로 뉴스 상세를 조회")
+    @GetMapping("/{newsId}")
+    public ResponseEntity<ApiResponse<NewsDetailResponse>> getNewsDetail(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long newsId){
+
+        NewsDetailResponse response = newsService.getNewsDetail(userId, newsId);
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+    }
+
+}
