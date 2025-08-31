@@ -40,6 +40,7 @@ out/
 .DS_Store
 
 ### Project ###
+src/main/resources/application.yml
 src/main/resources/application-secret.yml
 src/main/resources/application-localsecret.yml
 src/main/generated
