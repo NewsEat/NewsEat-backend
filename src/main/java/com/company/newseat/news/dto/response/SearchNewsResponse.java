@@ -9,7 +9,7 @@ public record SearchNewsResponse(
         String title,
         String content
 ) {
-    public static SearchNewsResponse of(News news) {
+    public static SearchNewsResponse from (News news) {
         return new SearchNewsResponse(
                 news.getNewsId(),
                 news.getImgUrl(),

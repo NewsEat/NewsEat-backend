@@ -10,7 +10,7 @@ public record BookmarkSimpleResponse(
         String imgUrl,
         String publishedAt
 ) {
-    public static BookmarkSimpleResponse of(Bookmark bookmark) {
+    public static BookmarkSimpleResponse from (Bookmark bookmark) {
         String formattedPublishedAt = DateUtil.formatDate(bookmark.getPublished_at());
 
         return new BookmarkSimpleResponse(
