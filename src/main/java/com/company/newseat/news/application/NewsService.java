@@ -1,11 +1,15 @@
 package com.company.newseat.news.application;
 
+import com.company.newseat.bookmark.repository.BookmarkRepository;
 import com.company.newseat.global.exception.code.status.ErrorStatus;
 import com.company.newseat.global.exception.handler.NewsHandler;
+import com.company.newseat.global.exception.handler.UserHandler;
 import com.company.newseat.news.domain.News;
 import com.company.newseat.news.dto.response.*;
 import com.company.newseat.news.repository.NewsRepository;
 import com.company.newseat.news.util.NewsSummaryPromptProvider;
+import com.company.newseat.user.domain.User;
+import com.company.newseat.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +26,8 @@ public class NewsService {
     private final OpenAiChatModel openAiChatModel;
     private final NewsRepository newsRepository;
     private final NewsSummaryPromptProvider promptProvider;
+    private final BookmarkRepository bookmarkRepository;
+    private final UserRepository userRepository;
 
     /**
      * open ai 이용한 뉴스 요약 by newsId
@@ -37,7 +43,7 @@ public class NewsService {
         String newsContent = news.getContent();
         String summaryText = generateSummaryFromContent(newsContent);
 
-        return new NewsSummaryResponse(title, sentiment, summaryText);
+        return NewsSummaryResponse.of(title, sentiment, summaryText);
     }
 
     private String generateSummaryFromContent(String content) {
@@ -52,7 +58,7 @@ public class NewsService {
     /**
      * 키워드로 뉴스 검색
      */
-    public SearchNewsResponseList searchNews(String keyword, Long lastNewsId, int size) {
+    public SearchNewsListResponse searchNews(String keyword, Long lastNewsId, int size) {
 
         List<News> newsList = newsRepository.searchByKeywordWithCursor(keyword, lastNewsId, size);
 
@@ -60,16 +66,16 @@ public class NewsService {
 
         List<SearchNewsResponse> list = newsList.stream()
                 .limit(size)
-                .map(SearchNewsResponse::of)
+                .map(SearchNewsResponse::from)
                 .toList();
 
-        return SearchNewsResponseList.of(list, hasMore);
+        return SearchNewsListResponse.of(list, hasMore);
     }
 
     /**
      * 카테고리별 뉴스 목록 조회
      */
-    public CategoryNewsResponseList getCategoryNews(String categoryCode, Long lastNewsId, int size) {
+    public CategoryNewsListResponse getCategoryNews(String categoryCode, Long lastNewsId, int size) {
 
         List<News> newsList = newsRepository.findByCategoryWithCursor(categoryCode, lastNewsId, size);
 
@@ -77,9 +83,24 @@ public class NewsService {
 
         List<CategoryNewsResponse> list = newsList.stream()
                 .limit(size)
-                .map(CategoryNewsResponse::of)
+                .map(CategoryNewsResponse::from)
                 .toList();
 
-        return CategoryNewsResponseList.of(list, hasMore);
+        return CategoryNewsListResponse.of(list, hasMore);
+    }
+
+    /**
+     * 뉴스 단건 조회
+     */
+    public NewsDetailResponse getNewsDetail(Long userId, Long newsId){
+        News news = newsRepository.findById(newsId)
+                .orElseThrow(() -> new NewsHandler(ErrorStatus.NEWS_NOT_FOUND));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+
+        boolean isBookmarked = bookmarkRepository.existsByUserAndNewsId(user, newsId);
+
+        return NewsDetailResponse.from(news, isBookmarked);
     }
 }

@@ -2,8 +2,8 @@ package com.company.newseat.bookmark.application;
 
 import com.company.newseat.bookmark.domain.Bookmark;
 import com.company.newseat.bookmark.dto.response.BookmarkResponse;
+import com.company.newseat.bookmark.dto.response.BookmarkSimpleListResponse;
 import com.company.newseat.bookmark.dto.response.BookmarkSimpleResponse;
-import com.company.newseat.bookmark.dto.response.BookmarkSimpleResponseList;
 import com.company.newseat.bookmark.repository.BookmarkRepository;
 import com.company.newseat.global.exception.code.status.ErrorStatus;
 import com.company.newseat.global.exception.handler.BookmarkHandler;
@@ -78,17 +78,17 @@ public class BookmarkService {
     /**
      * 북마크 리스트 조회 (커서 기반)
      */
-    public BookmarkSimpleResponseList getBookmarkList(Long userId, Long lastBookmarkId, int size) {
+    public BookmarkSimpleListResponse getBookmarkList(Long userId, Long lastBookmarkId, int size) {
         List<Bookmark> bookmarks = bookmarkRepository.findBookmarksByUserWithCursor(userId, lastBookmarkId, size);
 
         boolean hasMore = bookmarks.size() > size;
 
         List<BookmarkSimpleResponse> list = bookmarks.stream()
                 .limit(size)
-                .map(BookmarkSimpleResponse::of)
+                .map(BookmarkSimpleResponse::from)
                 .toList();
 
-        return BookmarkSimpleResponseList.of(list, hasMore);
+        return BookmarkSimpleListResponse.of(list, hasMore);
     }
 
 }

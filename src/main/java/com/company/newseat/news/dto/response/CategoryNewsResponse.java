@@ -10,7 +10,7 @@ public record CategoryNewsResponse(
         String publisher,
         String publishedAt
 ) {
-    public static CategoryNewsResponse of(News news) {
+    public static CategoryNewsResponse from (News news) {
         String formattedPublishedAt = DateUtil.formatDate(news.getPublished_at());
 
         return new CategoryNewsResponse(
