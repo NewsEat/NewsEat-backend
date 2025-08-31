@@ -85,7 +85,7 @@ public class BookmarkService {
 
         List<BookmarkSimpleResponse> list = bookmarks.stream()
                 .limit(size)
-                .map(BookmarkSimpleResponse::of)
+                .map(BookmarkSimpleResponse::from)
                 .toList();
 
         return BookmarkSimpleListResponse.of(list, hasMore);

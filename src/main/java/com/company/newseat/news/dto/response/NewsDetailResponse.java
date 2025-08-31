@@ -15,7 +15,7 @@ public record NewsDetailResponse(
         boolean isBookmarked
 
 ) {
-    public static NewsDetailResponse of (News news, boolean isBookmarked) {
+    public static NewsDetailResponse from(News news, boolean isBookmarked) {
         String formattedPublishedAt = DateUtil.formatDate(news.getPublished_at());
 
         return new NewsDetailResponse(

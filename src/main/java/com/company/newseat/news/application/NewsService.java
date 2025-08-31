@@ -43,7 +43,7 @@ public class NewsService {
         String newsContent = news.getContent();
         String summaryText = generateSummaryFromContent(newsContent);
 
-        return new NewsSummaryResponse(title, sentiment, summaryText);
+        return NewsSummaryResponse.of(title, sentiment, summaryText);
     }
 
     private String generateSummaryFromContent(String content) {
@@ -66,7 +66,7 @@ public class NewsService {
 
         List<SearchNewsResponse> list = newsList.stream()
                 .limit(size)
-                .map(SearchNewsResponse::of)
+                .map(SearchNewsResponse::from)
                 .toList();
 
         return SearchNewsListResponse.of(list, hasMore);
@@ -83,7 +83,7 @@ public class NewsService {
 
         List<CategoryNewsResponse> list = newsList.stream()
                 .limit(size)
-                .map(CategoryNewsResponse::of)
+                .map(CategoryNewsResponse::from)
                 .toList();
 
         return CategoryNewsListResponse.of(list, hasMore);
@@ -101,6 +101,6 @@ public class NewsService {
 
         boolean isBookmarked = bookmarkRepository.existsByUserAndNewsId(user, newsId);
 
-        return NewsDetailResponse.of(news, isBookmarked);
+        return NewsDetailResponse.from(news, isBookmarked);
     }
 }
