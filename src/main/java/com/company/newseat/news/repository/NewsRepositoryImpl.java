@@ -1,6 +1,9 @@
 package com.company.newseat.news.repository;
 
+import com.company.newseat.home.dto.response.PositiveNewsResponse;
 import com.company.newseat.news.domain.News;
+import com.company.newseat.news.domain.type.Sentiment;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +57,41 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
         if (lastNewsId != null && lastNewsId != 0) {
             query.where(news.newsId.lt(lastNewsId));
         }
+
+        return query.fetch();
+    }
+
+    @Override
+    public List<PositiveNewsResponse> findGlobalPositiveNews(int limit){
+        var query = queryFactory
+                .select(Projections.constructor(
+                        PositiveNewsResponse.class,
+                        news.imgUrl,
+                        news.title
+                ))
+                .from(news)
+                .where(news.sentiment.eq(Sentiment.POSITIVE))
+                .orderBy(news.published_at.desc())
+                .limit(limit);
+
+        return query.fetch();
+    }
+
+    @Override
+    public List<PositiveNewsResponse> findPreferredPositiveNews(List<Long> categoryIds, int limit) {
+        var query = queryFactory
+                .select(Projections.constructor(
+                        PositiveNewsResponse.class,
+                        news.imgUrl,
+                        news.title
+                ))
+                .from(news)
+                .where(
+                        news.sentiment.eq(Sentiment.POSITIVE)
+                                .and(news.category.categoryId.in(categoryIds))
+                )
+                .orderBy(news.published_at.desc())
+                .limit(limit);
 
         return query.fetch();
     }
