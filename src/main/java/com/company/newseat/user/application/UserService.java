@@ -5,6 +5,7 @@ import com.company.newseat.category.repository.CategoryRepository;
 import com.company.newseat.global.exception.code.status.ErrorStatus;
 import com.company.newseat.global.exception.handler.CategoryHandler;
 import com.company.newseat.global.exception.handler.UserHandler;
+import com.company.newseat.user.dto.response.NewsModeResponse;
 import com.company.newseat.user.domain.CategoryPreference;
 import com.company.newseat.user.domain.User;
 import com.company.newseat.user.dto.response.MypageProfileResponse;
@@ -80,5 +81,25 @@ public class UserService {
                 .toList();
 
         user.getPreferences().addAll(newPreferences);
+    }
+
+    /**
+     * 뉴스 디톡스 모드 설정
+     */
+    @Transactional
+    public NewsModeResponse updateDetoxMode(Long userId, boolean isDetoxMode) {
+
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+
+        if (isDetoxMode) {
+            user.enableDetoxMode();
+        } else {
+            user.disableDetoxMode();
+        }
+
+        userRepository.save(user);
+
+        return NewsModeResponse.of(isDetoxMode);
     }
 }

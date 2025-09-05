@@ -1,6 +1,8 @@
 package com.company.newseat.user.presentation;
 
 import com.company.newseat.global.response.ApiResponse;
+import com.company.newseat.user.dto.request.NewsModeRequest;
+import com.company.newseat.user.dto.response.NewsModeResponse;
 import com.company.newseat.user.application.UserService;
 import com.company.newseat.user.dto.request.UpdateCategoryRequest;
 import com.company.newseat.user.dto.request.UpdateNicknameRequest;
@@ -55,5 +57,16 @@ public class UserController {
         userService.updateCategories(userId, request.categoryIds());
 
         return ResponseEntity.ok(ApiResponse.onSuccess(null));
+    }
+
+    @Operation(summary = "뉴스 디톡스 모드 설정", description = "뉴스 디톡스 모드 설정")
+    @PutMapping("/detox-mode")
+    public ResponseEntity<ApiResponse<NewsModeResponse>> updateDetoxMode(
+            @AuthenticationPrincipal Long userId,
+            @RequestBody @Valid NewsModeRequest request){
+
+        NewsModeResponse response = userService.updateDetoxMode(userId, request.isDetoxMode());
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
 }
