@@ -93,7 +93,6 @@ public class AuthService {
         }
 
         Tokens tokens = tokenProvider.generateToken(getJwtUserDetails(user.getUserId()));
-        response.setHeader("Refresh-Token", tokens.refreshToken());
 
         return LoginResponse.of(tokens, user);
     }
