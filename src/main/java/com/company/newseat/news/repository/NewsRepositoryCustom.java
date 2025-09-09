@@ -1,5 +1,6 @@
 package com.company.newseat.news.repository;
 
+import com.company.newseat.home.dto.response.HomePreferNewsResponse;
 import com.company.newseat.home.dto.response.PositiveNewsResponse;
 import com.company.newseat.news.domain.News;
 
@@ -13,4 +14,7 @@ public interface NewsRepositoryCustom {
 
     List<PositiveNewsResponse> findGlobalPositiveNews(int limit);
     List<PositiveNewsResponse> findPreferredPositiveNews(List<Long> categoryIds, int limit);
+
+    List<HomePreferNewsResponse> findPreferredPositiveNews(Long categoryId, int limit);
+    List<HomePreferNewsResponse> findByCategoryWithLimit(Long categoryId, int limit);
 }

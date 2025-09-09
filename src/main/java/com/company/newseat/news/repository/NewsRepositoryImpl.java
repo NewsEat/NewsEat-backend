@@ -1,5 +1,6 @@
 package com.company.newseat.news.repository;
 
+import com.company.newseat.home.dto.response.HomePreferNewsResponse;
 import com.company.newseat.home.dto.response.PositiveNewsResponse;
 import com.company.newseat.news.domain.News;
 import com.company.newseat.news.domain.type.Sentiment;
@@ -94,5 +95,38 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
                 .limit(limit);
 
         return query.fetch();
+    }
+
+    @Override
+    public List<HomePreferNewsResponse> findPreferredPositiveNews(Long categoryId, int limit) {
+        return queryFactory
+                .select(Projections.constructor(
+                        HomePreferNewsResponse.class,
+                        news.imgUrl,
+                        news.title
+                ))
+                .from(news)
+                .where(
+                        news.sentiment.eq(Sentiment.POSITIVE)
+                                .and(news.category.categoryId.eq(categoryId))
+                )
+                .orderBy(news.published_at.desc())
+                .limit(limit)
+                .fetch();
+    }
+
+    @Override
+    public List<HomePreferNewsResponse> findByCategoryWithLimit(Long categoryId, int limit) {
+        return queryFactory
+                .select(Projections.constructor(
+                        HomePreferNewsResponse.class,
+                        news.imgUrl,
+                        news.title
+                ))
+                .from(news)
+                .where(news.category.categoryId.eq(categoryId))
+                .orderBy(news.published_at.desc())
+                .limit(limit)
+                .fetch();
     }
 }

@@ -2,6 +2,8 @@ package com.company.newseat.home.application;
 
 import com.company.newseat.global.exception.code.status.ErrorStatus;
 import com.company.newseat.global.exception.handler.UserHandler;
+import com.company.newseat.home.dto.response.HomePreferNewsListResponse;
+import com.company.newseat.home.dto.response.HomePreferNewsResponse;
 import com.company.newseat.home.dto.response.PositiveNewsListResponse;
 import com.company.newseat.home.dto.response.PositiveNewsResponse;
 import com.company.newseat.news.repository.NewsRepository;
@@ -26,6 +28,9 @@ public class HomeService {
     private final UserRepository userRepository;
     private final NewsRepository newsRepository;
 
+    /**
+     * 사용자별 긍정 뉴스 5개 조회 (관심 카테고리 3 + 전체 2)
+     */
     public PositiveNewsListResponse getHomePositiveNews(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
@@ -50,6 +55,33 @@ public class HomeService {
                 .toList();
 
         return PositiveNewsListResponse.of(finalList);
+    }
+
+    /**
+     * 사용자 관심 카테고리별 뉴스 5개 조회
+     */
+    public HomePreferNewsListResponse getHomePrefNewsByCategory(Long userId) {
+        User user = userRepository.findByIdWithPreferencesAndCategory(userId)
+                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+
+        List<HomePreferNewsListResponse.HomeCategoryNews> categoryNewsList = new ArrayList<>();
+
+        for (var preference : user.getPreferences()) {
+            Long categoryId = preference.getCategory().getCategoryId();
+            String categoryName = preference.getCategory().getName();
+
+            List<HomePreferNewsResponse> newsList;
+
+            if (user.getIsDetox()) {
+                newsList = newsRepository.findPreferredPositiveNews(categoryId, 5);
+            } else {
+                newsList = newsRepository.findByCategoryWithLimit(categoryId, 5);
+            }
+
+            categoryNewsList.add(new HomePreferNewsListResponse.HomeCategoryNews(categoryName, newsList));
+        }
+
+        return HomePreferNewsListResponse.of(categoryNewsList);
     }
 
 }
