@@ -2,6 +2,7 @@ package com.company.newseat.home.presentation;
 
 import com.company.newseat.global.response.ApiResponse;
 import com.company.newseat.home.application.HomeService;
+import com.company.newseat.home.dto.response.HomeNewsListResponse;
 import com.company.newseat.home.dto.response.HomePreferNewsListResponse;
 import com.company.newseat.home.dto.response.PositiveNewsListResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,6 +38,16 @@ public class HomeController {
             @AuthenticationPrincipal Long userId) {
 
         HomePreferNewsListResponse response = homeService.getHomePrefNewsByCategory(userId);
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+    }
+
+    @Operation(summary = "홈 화면 최신 뉴스 조회", description = "최신 뉴스 5개 조회")
+    @GetMapping("/latest-news")
+    public ResponseEntity<ApiResponse<HomeNewsListResponse>> getHomeNews(
+            @AuthenticationPrincipal Long userId) {
+
+        HomeNewsListResponse response = homeService.getHomeNews(userId);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }

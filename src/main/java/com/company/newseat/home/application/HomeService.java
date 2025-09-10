@@ -6,6 +6,8 @@ import com.company.newseat.home.dto.response.HomePreferNewsListResponse;
 import com.company.newseat.home.dto.response.HomePreferNewsResponse;
 import com.company.newseat.home.dto.response.PositiveNewsListResponse;
 import com.company.newseat.home.dto.response.PositiveNewsResponse;
+import com.company.newseat.home.dto.response.HomeNewsListResponse;
+import com.company.newseat.home.dto.response.HomeNewsResponse;
 import com.company.newseat.news.repository.NewsRepository;
 import com.company.newseat.user.domain.User;
 import com.company.newseat.user.repository.UserRepository;
@@ -84,4 +86,21 @@ public class HomeService {
         return HomePreferNewsListResponse.of(categoryNewsList);
     }
 
+    /**
+     * 홈화면 최신 뉴스 조회
+     */
+    public HomeNewsListResponse getHomeNews(Long userId){
+        User user = userRepository.findByIdWithPreferencesAndCategory(userId)
+                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+
+        List<HomeNewsResponse> newsList;
+
+        if (user.getIsDetox()) {
+            newsList = newsRepository.findLatestPositiveNews(5);
+        } else {
+            newsList = newsRepository.findLatestNews(5);
+        }
+
+        return HomeNewsListResponse.of(newsList);
+    }
 }
