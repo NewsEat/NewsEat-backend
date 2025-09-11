@@ -11,7 +11,7 @@ public record HomePreferNewsListResponse (
 
     public record HomeCategoryNews(
             String categoryName,
-            List<HomePreferNewsResponse> newsList
+            List<NewsItemResponse> newsList
     ) {
     }
 }

@@ -3,9 +3,9 @@ package com.company.newseat.home.dto.response;
 import java.util.List;
 
 public record PositiveNewsListResponse (
-        List<PositiveNewsResponse>  positiveNewsResponses
+        List<NewsItemResponse>  positiveNewsResponses
 ) {
-    public static PositiveNewsListResponse of (List<PositiveNewsResponse>  positiveNewsResponses){
+    public static PositiveNewsListResponse of (List<NewsItemResponse>  positiveNewsResponses){
         return new PositiveNewsListResponse(positiveNewsResponses);
     }
 }

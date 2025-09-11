@@ -1,6 +1,7 @@
 package com.company.newseat.home.dto.response;
 
-public record HomeNewsResponse (
+public record NewsItemResponse (
+        Long newsId,
         String imgUrl,
         String title
 ) {

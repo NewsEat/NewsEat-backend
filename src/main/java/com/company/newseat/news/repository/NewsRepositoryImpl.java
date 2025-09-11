@@ -1,8 +1,6 @@
 package com.company.newseat.news.repository;
 
-import com.company.newseat.home.dto.response.HomeNewsResponse;
-import com.company.newseat.home.dto.response.HomePreferNewsResponse;
-import com.company.newseat.home.dto.response.PositiveNewsResponse;
+import com.company.newseat.home.dto.response.NewsItemResponse;
 import com.company.newseat.news.domain.News;
 import com.company.newseat.news.domain.type.Sentiment;
 import com.querydsl.core.types.Projections;
@@ -64,10 +62,11 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
     }
 
     @Override
-    public List<PositiveNewsResponse> findGlobalPositiveNews(int limit){
+    public List<NewsItemResponse> findGlobalPositiveNews(int limit){
         var query = queryFactory
                 .select(Projections.constructor(
-                        PositiveNewsResponse.class,
+                        NewsItemResponse.class,
+                        news.newsId,
                         news.imgUrl,
                         news.title
                 ))
@@ -80,10 +79,11 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
     }
 
     @Override
-    public List<PositiveNewsResponse> findPreferredPositiveNews(List<Long> categoryIds, int limit) {
+    public List<NewsItemResponse> findPreferredPositiveNews(List<Long> categoryIds, int limit) {
         var query = queryFactory
                 .select(Projections.constructor(
-                        PositiveNewsResponse.class,
+                        NewsItemResponse.class,
+                        news.newsId,
                         news.imgUrl,
                         news.title
                 ))
@@ -99,10 +99,11 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
     }
 
     @Override
-    public List<HomePreferNewsResponse> findPreferredPositiveNews(Long categoryId, int limit) {
+    public List<NewsItemResponse> findPreferredPositiveNews(Long categoryId, int limit) {
         return queryFactory
                 .select(Projections.constructor(
-                        HomePreferNewsResponse.class,
+                        NewsItemResponse.class,
+                        news.newsId,
                         news.imgUrl,
                         news.title
                 ))
@@ -117,10 +118,11 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
     }
 
     @Override
-    public List<HomePreferNewsResponse> findByCategoryWithLimit(Long categoryId, int limit) {
+    public List<NewsItemResponse> findByCategoryWithLimit(Long categoryId, int limit) {
         return queryFactory
                 .select(Projections.constructor(
-                        HomePreferNewsResponse.class,
+                        NewsItemResponse.class,
+                        news.newsId,
                         news.imgUrl,
                         news.title
                 ))
@@ -132,10 +134,11 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
     }
 
     @Override
-    public List<HomeNewsResponse> findLatestNews(int limit){
+    public List<NewsItemResponse> findLatestNews(int limit){
         return queryFactory
                 .select(Projections.constructor(
-                        HomeNewsResponse.class,
+                        NewsItemResponse.class,
+                        news.newsId,
                         news.imgUrl,
                         news.title
                 ))
@@ -146,10 +149,11 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
     }
 
     @Override
-    public List<HomeNewsResponse> findLatestPositiveNews(int limit){
+    public List<NewsItemResponse> findLatestPositiveNews(int limit){
         return queryFactory
                 .select(Projections.constructor(
-                        HomeNewsResponse.class,
+                        NewsItemResponse.class,
+                        news.newsId,
                         news.imgUrl,
                         news.title
                 ))
