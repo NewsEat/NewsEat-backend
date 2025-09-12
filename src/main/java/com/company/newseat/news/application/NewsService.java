@@ -103,4 +103,18 @@ public class NewsService {
 
         return NewsDetailResponse.from(news, isBookmarked);
     }
+
+    /**
+     * 뉴스 하단 제안 뉴스 조회
+     */
+    public SuggestedNewsListResponse getSuggestedNews(Long newsId){
+        News news = newsRepository.findById(newsId)
+                .orElseThrow(() -> new NewsHandler(ErrorStatus.NEWS_NOT_FOUND));
+
+        Long categoryId = news.getCategory().getCategoryId();
+
+        List<NewsItemResponse> newsList = newsRepository.findByCategoryWithLimit(categoryId,5);
+
+        return SuggestedNewsListResponse.of(newsList);
+    }
 }
