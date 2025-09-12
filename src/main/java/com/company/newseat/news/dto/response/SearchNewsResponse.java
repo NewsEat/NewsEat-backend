@@ -1,5 +1,6 @@
 package com.company.newseat.news.dto.response;
 
+import com.company.newseat.global.util.DateUtil;
 import com.company.newseat.news.domain.News;
 
 public record SearchNewsResponse(
@@ -7,15 +8,16 @@ public record SearchNewsResponse(
         String imgUrl,
         String publisher,
         String title,
-        String content
+        String publishedAt
 ) {
     public static SearchNewsResponse from (News news) {
+        String formattedPublishedAt = DateUtil.formatDate(news.getPublished_at());
         return new SearchNewsResponse(
                 news.getNewsId(),
                 news.getImgUrl(),
                 news.getPublisher(),
                 news.getTitle(),
-                news.getContent()
+                formattedPublishedAt
         );
     }
 }
