@@ -3,7 +3,7 @@ package com.company.newseat.home.application;
 import com.company.newseat.global.exception.code.status.ErrorStatus;
 import com.company.newseat.global.exception.handler.UserHandler;
 import com.company.newseat.home.dto.response.HomePreferNewsListResponse;
-import com.company.newseat.home.dto.response.NewsItemResponse;
+import com.company.newseat.news.dto.response.NewsItemResponse;
 import com.company.newseat.home.dto.response.PositiveNewsListResponse;
 import com.company.newseat.home.dto.response.HomeNewsListResponse;
 import com.company.newseat.news.repository.NewsRepository;

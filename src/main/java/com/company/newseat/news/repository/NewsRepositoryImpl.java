@@ -1,6 +1,6 @@
 package com.company.newseat.news.repository;
 
-import com.company.newseat.home.dto.response.NewsItemResponse;
+import com.company.newseat.news.dto.response.NewsItemResponse;
 import com.company.newseat.news.domain.News;
 import com.company.newseat.news.domain.type.Sentiment;
 import com.querydsl.core.types.Projections;

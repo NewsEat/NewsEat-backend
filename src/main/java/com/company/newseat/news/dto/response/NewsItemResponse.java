@@ -1,4 +1,4 @@
-package com.company.newseat.home.dto.response;
+package com.company.newseat.news.dto.response;
 
 public record NewsItemResponse (
         Long newsId,

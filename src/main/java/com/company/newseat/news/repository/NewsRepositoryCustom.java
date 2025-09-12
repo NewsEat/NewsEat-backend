@@ -1,9 +1,6 @@
 package com.company.newseat.news.repository;
 
-//import com.company.newseat.home.dto.response.HomeNewsResponse;
-//import com.company.newseat.home.dto.response.HomePreferNewsResponse;
-import com.company.newseat.home.dto.response.NewsItemResponse;
-//import com.company.newseat.home.dto.response.PositiveNewsResponse;
+import com.company.newseat.news.dto.response.NewsItemResponse;
 import com.company.newseat.news.domain.News;
 
 import java.util.List;
