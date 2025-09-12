@@ -1,5 +1,7 @@
 package com.company.newseat.home.dto.response;
 
+import com.company.newseat.news.dto.response.NewsItemResponse;
+
 import java.util.List;
 
 public record HomePreferNewsListResponse (
@@ -11,7 +13,7 @@ public record HomePreferNewsListResponse (
 
     public record HomeCategoryNews(
             String categoryName,
-            List<HomePreferNewsResponse> newsList
+            List<NewsItemResponse> newsList
     ) {
     }
 }

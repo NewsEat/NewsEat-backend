@@ -3,11 +3,9 @@ package com.company.newseat.home.application;
 import com.company.newseat.global.exception.code.status.ErrorStatus;
 import com.company.newseat.global.exception.handler.UserHandler;
 import com.company.newseat.home.dto.response.HomePreferNewsListResponse;
-import com.company.newseat.home.dto.response.HomePreferNewsResponse;
+import com.company.newseat.news.dto.response.NewsItemResponse;
 import com.company.newseat.home.dto.response.PositiveNewsListResponse;
-import com.company.newseat.home.dto.response.PositiveNewsResponse;
 import com.company.newseat.home.dto.response.HomeNewsListResponse;
-import com.company.newseat.home.dto.response.HomeNewsResponse;
 import com.company.newseat.news.repository.NewsRepository;
 import com.company.newseat.user.domain.User;
 import com.company.newseat.user.repository.UserRepository;
@@ -41,18 +39,18 @@ public class HomeService {
                 .map(p -> p.getCategory().getCategoryId())
                 .collect(Collectors.toList());
 
-        List<PositiveNewsResponse> preferredNews = new ArrayList<>();
+        List<NewsItemResponse> preferredNews = new ArrayList<>();
         if (!categoryIds.isEmpty()) {
             preferredNews = newsRepository.findPreferredPositiveNews(categoryIds, 3);
         }
 
-        List<PositiveNewsResponse> globalNews = newsRepository.findGlobalPositiveNews(5);
+        List<NewsItemResponse> globalNews = newsRepository.findGlobalPositiveNews(5);
 
-        LinkedHashSet<PositiveNewsResponse> result = new LinkedHashSet<>();
+        LinkedHashSet<NewsItemResponse> result = new LinkedHashSet<>();
         result.addAll(preferredNews);
         result.addAll(globalNews);
 
-        List<PositiveNewsResponse> finalList = result.stream()
+        List<NewsItemResponse> finalList = result.stream()
                 .limit(5)
                 .toList();
 
@@ -72,7 +70,7 @@ public class HomeService {
             Long categoryId = preference.getCategory().getCategoryId();
             String categoryName = preference.getCategory().getName();
 
-            List<HomePreferNewsResponse> newsList;
+            List<NewsItemResponse> newsList;
 
             if (user.getIsDetox()) {
                 newsList = newsRepository.findPreferredPositiveNews(categoryId, 5);
@@ -93,7 +91,7 @@ public class HomeService {
         User user = userRepository.findByIdWithPreferencesAndCategory(userId)
                 .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
 
-        List<HomeNewsResponse> newsList;
+        List<NewsItemResponse> newsList;
 
         if (user.getIsDetox()) {
             newsList = newsRepository.findLatestPositiveNews(5);
