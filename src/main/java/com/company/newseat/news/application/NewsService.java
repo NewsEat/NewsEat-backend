@@ -1,5 +1,6 @@
 package com.company.newseat.news.application;
 
+import com.company.newseat.bookmark.domain.Bookmark;
 import com.company.newseat.bookmark.repository.BookmarkRepository;
 import com.company.newseat.global.exception.code.status.ErrorStatus;
 import com.company.newseat.global.exception.handler.NewsHandler;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ai.openai.OpenAiChatModel;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -93,15 +95,16 @@ public class NewsService {
      * 뉴스 단건 조회
      */
     public NewsDetailResponse getNewsDetail(Long userId, Long newsId){
-        News news = newsRepository.findById(newsId)
+        News news = newsRepository.findByIdWithCategory(newsId)
                 .orElseThrow(() -> new NewsHandler(ErrorStatus.NEWS_NOT_FOUND));
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
 
-        boolean isBookmarked = bookmarkRepository.existsByUserAndNewsId(user, newsId);
+        Optional<Bookmark> bookmarkOpt = bookmarkRepository.findByUserAndNewsId(user, newsId);
+        Long bookmarkId = bookmarkOpt.map(Bookmark::getBookmarkId).orElse(null);
 
-        return NewsDetailResponse.from(news, isBookmarked);
+        return NewsDetailResponse.from(news, bookmarkId);
     }
 
     /**

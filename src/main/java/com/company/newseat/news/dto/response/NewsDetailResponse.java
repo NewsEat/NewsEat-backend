@@ -12,11 +12,13 @@ public record NewsDetailResponse(
         String publishedAt,
         String category,
         String sentiment,
-        boolean isBookmarked
+        boolean isBookmarked,
+        Long bookmarkId
 
 ) {
-    public static NewsDetailResponse from(News news, boolean isBookmarked) {
+    public static NewsDetailResponse from(News news, Long bookmarkId) {
         String formattedPublishedAt = DateUtil.formatDate(news.getPublished_at());
+        boolean isBookmarked = bookmarkId != null;
 
         return new NewsDetailResponse(
                 news.getNewsId(),
@@ -27,7 +29,8 @@ public record NewsDetailResponse(
                 formattedPublishedAt,
                 news.getCategory().getName(),
                 news.getSentiment().getDescription(),
-                isBookmarked
+                isBookmarked,
+                bookmarkId
         );
     }
 }
