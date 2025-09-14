@@ -1,14 +1,12 @@
 package com.company.newseat.bookmark.presentation;
 
 import com.company.newseat.bookmark.application.BookmarkService;
-import com.company.newseat.bookmark.dto.request.AddBookmarkRequest;
 import com.company.newseat.bookmark.dto.response.AddBookmarkResponse;
 import com.company.newseat.bookmark.dto.response.BookmarkResponse;
 import com.company.newseat.bookmark.dto.response.BookmarkSimpleListResponse;
 import com.company.newseat.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +26,9 @@ public class BookmarkController {
     @PostMapping("/{newsId}")
     public ResponseEntity<ApiResponse<AddBookmarkResponse>> createBookmark(
             @AuthenticationPrincipal Long userId,
-            @RequestBody @Valid AddBookmarkRequest request) {
+            @PathVariable Long newsId) {
 
-        Long bookmarkId = bookmarkService.addBookmark(userId, request.newsId());
+        Long bookmarkId = bookmarkService.addBookmark(userId, newsId);
 
         AddBookmarkResponse response = new AddBookmarkResponse(bookmarkId);
 
