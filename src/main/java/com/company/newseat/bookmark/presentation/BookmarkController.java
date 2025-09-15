@@ -4,6 +4,7 @@ import com.company.newseat.bookmark.application.BookmarkService;
 import com.company.newseat.bookmark.dto.response.AddBookmarkResponse;
 import com.company.newseat.bookmark.dto.response.BookmarkResponse;
 import com.company.newseat.bookmark.dto.response.BookmarkSimpleListResponse;
+import com.company.newseat.bookmark.dto.response.BookmarkSummaryResponse;
 import com.company.newseat.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -66,6 +67,16 @@ public class BookmarkController {
             @RequestParam(defaultValue = "10") int size) {
 
         BookmarkSimpleListResponse response = bookmarkService.getBookmarkList(userId, lastBookmarkId, size);
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+    }
+
+    @Operation(summary = "북마크한 뉴스 내용 요약", description = "bookmarkId ID를 받아 AI를 활용해 북마크한 뉴스 내용 요약 생성")
+    @PostMapping("/summary/{bookmarkId}")
+    public ResponseEntity<ApiResponse<BookmarkSummaryResponse>> summarizeBookmark(
+            @PathVariable Long bookmarkId) {
+
+        BookmarkSummaryResponse response = bookmarkService.summarizeBookmark(bookmarkId);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
