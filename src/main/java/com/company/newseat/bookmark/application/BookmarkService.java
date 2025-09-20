@@ -76,7 +76,9 @@ public class BookmarkService {
                 .filter(b -> b.getUser().getUserId().equals(userId))
                 .orElseThrow(() -> new BookmarkHandler(ErrorStatus.BOOKMARK_NOT_FOUND));
 
-        return BookmarkResponse.from(bookmark);
+        boolean newsDeleted = !newsRepository.existsById(bookmark.getNewsId());
+
+        return BookmarkResponse.from(bookmark, newsDeleted);
     }
 
     /**
@@ -89,7 +91,10 @@ public class BookmarkService {
 
         List<BookmarkSimpleResponse> list = bookmarks.stream()
                 .limit(size)
-                .map(BookmarkSimpleResponse::from)
+                .map(b -> {
+                    boolean newsDeleted = !newsRepository.existsById(b.getNewsId());
+                    return BookmarkSimpleResponse.from(b, newsDeleted);
+                })
                 .toList();
 
         return BookmarkSimpleListResponse.of(list, hasMore);
