@@ -8,9 +8,10 @@ public record BookmarkSimpleResponse(
         String title,
         String category,
         String imgUrl,
-        String publishedAt
+        String publishedAt,
+        boolean newsDeleted
 ) {
-    public static BookmarkSimpleResponse from (Bookmark bookmark) {
+    public static BookmarkSimpleResponse from (Bookmark bookmark, boolean newsDeleted) {
         String formattedPublishedAt = DateUtil.formatDate(bookmark.getPublished_at());
 
         return new BookmarkSimpleResponse(
@@ -18,7 +19,8 @@ public record BookmarkSimpleResponse(
                 bookmark.getTitle(),
                 bookmark.getCategory(),
                 bookmark.getImgUrl(),
-                formattedPublishedAt
+                formattedPublishedAt,
+                newsDeleted
         );
     }
 }

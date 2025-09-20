@@ -11,9 +11,10 @@ public record BookmarkResponse(
         String sentiment,
         String publishedAt,
         String imgUrl,
-        String category
+        String category,
+        boolean newsDeleted
 ) {
-    public static BookmarkResponse from(Bookmark bookmark) {
+    public static BookmarkResponse from(Bookmark bookmark, boolean newsDeleted) {
         String formattedPublishedAt = DateUtil.formatDate(bookmark.getPublished_at());
 
         return new BookmarkResponse(
@@ -24,6 +25,8 @@ public record BookmarkResponse(
                 bookmark.getSentiment().getDescription(),
                 formattedPublishedAt,
                 bookmark.getImgUrl(),
-                bookmark.getCategory());
+                bookmark.getCategory(),
+                newsDeleted
+        );
     }
 }

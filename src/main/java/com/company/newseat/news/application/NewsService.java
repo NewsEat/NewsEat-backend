@@ -116,7 +116,7 @@ public class NewsService {
 
         Long categoryId = news.getCategory().getCategoryId();
 
-        List<NewsItemResponse> newsList = newsRepository.findByCategoryWithLimit(categoryId,5);
+        List<NewsItemResponse> newsList = newsRepository.findByCategoryWithLimitExcludingNews(categoryId, 5, newsId);
 
         return SuggestedNewsListResponse.of(newsList);
     }

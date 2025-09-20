@@ -15,6 +15,7 @@ public interface NewsRepositoryCustom {
 
     List<NewsItemResponse> findPreferredPositiveNews(Long categoryId, int limit);
     List<NewsItemResponse> findByCategoryWithLimit(Long categoryId, int limit);
+    List<NewsItemResponse> findByCategoryWithLimitExcludingNews(Long categoryId, int limit, Long excludeNewsId);
 
     List<NewsItemResponse> findLatestNews(int limit);
     List<NewsItemResponse> findLatestPositiveNews(int limit);

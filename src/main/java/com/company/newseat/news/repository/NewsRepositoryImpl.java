@@ -134,6 +134,25 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
     }
 
     @Override
+    public List<NewsItemResponse> findByCategoryWithLimitExcludingNews(Long categoryId, int limit, Long excludeNewsId) {
+        return queryFactory
+                .select(Projections.constructor(
+                        NewsItemResponse.class,
+                        news.newsId,
+                        news.imgUrl,
+                        news.title
+                ))
+                .from(news)
+                .where(
+                        news.category.categoryId.eq(categoryId)
+                                .and(news.newsId.ne(excludeNewsId))
+                )
+                .orderBy(news.published_at.desc())
+                .limit(limit)
+                .fetch();
+    }
+
+    @Override
     public List<NewsItemResponse> findLatestNews(int limit){
         return queryFactory
                 .select(Projections.constructor(
