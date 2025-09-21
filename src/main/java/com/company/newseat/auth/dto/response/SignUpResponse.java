@@ -5,11 +5,13 @@ import lombok.Builder;
 
 @Builder
 public record SignUpResponse(
-        Long userId
+        Long userId,
+        String nickname
 ) {
     public static SignUpResponse of(User user) {
         return SignUpResponse.builder()
                 .userId(user.getUserId())
+                .nickname(user.getNickname())
                 .build();
     }
 }

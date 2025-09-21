@@ -8,12 +8,14 @@ import lombok.Builder;
 @Builder
 public record LoginResponse(
         Role role,
+        String nickname,
         String accessToken,
         String refreshToken
 ) {
     public static LoginResponse of(Tokens token, User user) {
         return LoginResponse.builder()
                 .role(user.getRole())
+                .nickname(user.getNickname())
                 .accessToken(token.accessToken())
                 .refreshToken(token.refreshToken())
                 .build();
