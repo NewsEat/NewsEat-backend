@@ -9,6 +9,7 @@ import com.company.newseat.user.dto.response.NewsModeResponse;
 import com.company.newseat.user.domain.CategoryPreference;
 import com.company.newseat.user.domain.User;
 import com.company.newseat.user.dto.response.MypageProfileResponse;
+import com.company.newseat.user.dto.response.UserSimpleInfoResponse;
 import com.company.newseat.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -101,5 +102,16 @@ public class UserService {
         userRepository.save(user);
 
         return NewsModeResponse.of(isDetoxMode);
+    }
+
+    /**
+     * 전역에서 사용하는 닉네임 조회용 api
+     */
+    public UserSimpleInfoResponse getMyInfo(Long userId) {
+        String nickname = userRepository.findNicknameById(userId);
+        if (nickname == null) {
+            throw new UserHandler(ErrorStatus.USER_NOT_FOUND);
+        }
+        return UserSimpleInfoResponse.of(nickname);
     }
 }

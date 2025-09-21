@@ -7,6 +7,7 @@ import com.company.newseat.user.application.UserService;
 import com.company.newseat.user.dto.request.UpdateCategoryRequest;
 import com.company.newseat.user.dto.request.UpdateNicknameRequest;
 import com.company.newseat.user.dto.response.MypageProfileResponse;
+import com.company.newseat.user.dto.response.UserSimpleInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -66,6 +67,16 @@ public class UserController {
             @RequestBody @Valid NewsModeRequest request){
 
         NewsModeResponse response = userService.updateDetoxMode(userId, request.isDetoxMode());
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+    }
+
+    @Operation(summary = "내 정보 조회 (전역에서 사용)", description = "현재 로그인한 유저의 기본정보(닉네임) 조회")
+    @PutMapping("/me")
+    public ResponseEntity<ApiResponse<UserSimpleInfoResponse>> getMyInfo(
+            @AuthenticationPrincipal Long userId){
+
+        UserSimpleInfoResponse response = userService.getMyInfo(userId);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
