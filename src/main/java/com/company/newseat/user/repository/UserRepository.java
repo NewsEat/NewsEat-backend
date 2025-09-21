@@ -20,4 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "JOIN FETCH p.category " +
             "WHERE u.userId = :userId")
     Optional<User> findByIdWithPreferencesAndCategory(@Param("userId") Long userId);
+
+    @Query("select u.nickname from User u where u.userId = :userId")
+    String findNicknameById(@Param("userId") Long userId);
 }
