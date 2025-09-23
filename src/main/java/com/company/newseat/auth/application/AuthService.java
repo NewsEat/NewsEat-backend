@@ -1,13 +1,10 @@
 package com.company.newseat.auth.application;
 
-import com.company.newseat.auth.dto.request.SendEmailCodeRequest;
-import com.company.newseat.auth.dto.request.VerifyEmailCodeRequest;
+import com.company.newseat.auth.dto.request.*;
 import com.company.newseat.auth.dto.response.*;
 import com.company.newseat.auth.util.TokenProvider;
 import com.company.newseat.auth.dto.jwt.JwtUserDetails;
 import com.company.newseat.auth.dto.jwt.Tokens;
-import com.company.newseat.auth.dto.request.LoginRequest;
-import com.company.newseat.auth.dto.request.SignUpRequest;
 import com.company.newseat.category.domain.Category;
 import com.company.newseat.category.repository.CategoryRepository;
 import com.company.newseat.email.application.MailService;
@@ -177,5 +174,19 @@ public class AuthService {
 
         emailAuth.setIsChecked(true);
         return true;
+    }
+
+    /**
+     * 로그인한 사용자의 비밀번호 변경
+     */
+    public void changePassword(Long userId, ResetPasswordRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+
+        if (!request.password().equals(request.confirmPassword()))
+            throw new AuthHandler(ErrorStatus.PASSWORD_NOT_CORRECT);
+
+        user.changePassword(passwordEncoder.encode(request.password()));
+        userRepository.save(user);
     }
 }

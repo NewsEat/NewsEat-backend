@@ -1,5 +1,7 @@
 package com.company.newseat.user.presentation;
 
+import com.company.newseat.auth.application.AuthService;
+import com.company.newseat.auth.dto.request.ResetPasswordRequest;
 import com.company.newseat.global.response.ApiResponse;
 import com.company.newseat.user.dto.request.NewsModeRequest;
 import com.company.newseat.user.dto.response.NewsModeResponse;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final AuthService authService;
 
     @Operation(summary = "마이페이지 프로필 조회", description = "마이페이지에서 닉네임 및 관심사 조회")
     @GetMapping("/profile")
@@ -72,12 +75,23 @@ public class UserController {
     }
 
     @Operation(summary = "내 정보 조회 (전역에서 사용)", description = "현재 로그인한 유저의 기본정보(닉네임) 조회")
-    @PutMapping("/me")
+    @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserSimpleInfoResponse>> getMyInfo(
             @AuthenticationPrincipal Long userId){
 
         UserSimpleInfoResponse response = userService.getMyInfo(userId);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
+    }
+
+    @Operation(summary = "마이페이지 비밀번호 변경", description = "현재 로그인한 사용자의 비밀번호 변경")
+    @PatchMapping("/change-password")
+    public ResponseEntity<ApiResponse<Void>> changePassword(
+            @AuthenticationPrincipal Long userId,
+            @RequestBody @Valid ResetPasswordRequest request) {
+
+        authService.changePassword(userId, request);
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(null));
     }
 }

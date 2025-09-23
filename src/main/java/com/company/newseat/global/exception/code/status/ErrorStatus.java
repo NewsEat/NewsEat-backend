@@ -30,6 +30,7 @@ public enum ErrorStatus implements BaseErrorCode {
     EMAIL_AUTH_NOT_FOUND(NOT_FOUND, "AUTH4004", "이메일 인증 정보가 없습니다."),
     EMAIL_VERIFICATION_CODE_INVALID(BAD_REQUEST, "AUTH4005", "이메일 인증번호가 틀렸습니다."),
     EMAIL_VERIFICATION_EXPIRED(BAD_REQUEST, "AUTH4006", "이메일 인증 유효시간이 만료되었습니다."),
+    PASSWORD_NOT_CORRECT(BAD_REQUEST, "AUTH4007", "비밀번호 입력값과 일치하지 않습니다."),
 
     ACCESS_DENIED(FORBIDDEN, "AUTH4031", "접근 권한이 없습니다."),
 
