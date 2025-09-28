@@ -1,7 +1,7 @@
 package com.company.newseat.user.presentation;
 
 import com.company.newseat.auth.application.AuthService;
-import com.company.newseat.auth.dto.request.ResetPasswordRequest;
+import com.company.newseat.auth.dto.request.ChangePasswordRequest;
 import com.company.newseat.global.response.ApiResponse;
 import com.company.newseat.user.dto.request.NewsModeRequest;
 import com.company.newseat.user.dto.response.NewsModeResponse;
@@ -88,7 +88,7 @@ public class UserController {
     @PatchMapping("/change-password")
     public ResponseEntity<ApiResponse<Void>> changePassword(
             @AuthenticationPrincipal Long userId,
-            @RequestBody @Valid ResetPasswordRequest request) {
+            @RequestBody @Valid ChangePasswordRequest request) {
 
         authService.changePassword(userId, request);
 

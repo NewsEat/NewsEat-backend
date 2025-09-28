@@ -4,8 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record ResetPasswordRequest(
-
+public record ChangePasswordRequest(
         @NotBlank(message = "비밀번호는 필수 입력값입니다")
         @Size(min = 8, max = 16, message = "비밀번호를 8~16자 사이로 입력해주세요.")
         @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!@#$%^&*()_+{}|:<>?~,-]{8,16}$",
