@@ -13,4 +13,6 @@ public interface NewsRepository extends JpaRepository<News, Long>, NewsRepositor
 
     @Query("SELECT n FROM News n JOIN FETCH n.category WHERE n.newsId = :newsId")
     Optional<News> findByIdWithCategory(@Param("newsId") Long newsId);
+
+    boolean existsByTitle(String title);
 }
