@@ -202,7 +202,7 @@ public class HomeService {
         for (int i = 0; i < missing; i++) {
             padded.add(new NewsItemResponse(
                     -1L,              // 더미 ID
-                    "https://raw.githubusercontent.com/NewsEat/assets/refs/heads/main/news_eat_logo.png",     // 더미 이미지
+                    "https://raw.githubusercontent.com/NewsEat/assets/refs/heads/main/dummy_image.png",     // 더미 이미지
                     "곧 업데이트될 뉴스입니다."        // 더미 제목
             ));
         }
