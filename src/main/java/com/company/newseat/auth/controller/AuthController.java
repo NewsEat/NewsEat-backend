@@ -1,10 +1,7 @@
 package com.company.newseat.auth.controller;
 
 import com.company.newseat.auth.application.AuthService;
-import com.company.newseat.auth.dto.request.VerifyEmailCodeRequest ;
-import com.company.newseat.auth.dto.request.LoginRequest;
-import com.company.newseat.auth.dto.request.SendEmailCodeRequest;
-import com.company.newseat.auth.dto.request.SignUpRequest;
+import com.company.newseat.auth.dto.request.*;
 import com.company.newseat.auth.dto.response.*;
 import com.company.newseat.email.domain.EmailAuth;
 import com.company.newseat.global.response.ApiResponse;
@@ -74,7 +71,7 @@ public class AuthController {
         return authService.getTestToken(userId);
     }
 
-    @Operation(summary = "인증 이메일 전송", description = "인증 이메일 전송")
+    @Operation(summary = "인증 이메일 전송", description = "인증 이메일 전송 (Purpose 1 = 회원가입, Purpose 3 = 비밀번호 찾기)")
     @PostMapping("/email")
     public ResponseEntity<ApiResponse<SendEmailCodeResponse>> sendCodeMail(
             @RequestBody @Valid SendEmailCodeRequest request) {
@@ -94,5 +91,25 @@ public class AuthController {
         VerifyEmailCodeResponse response = VerifyEmailCodeResponse.of(isChecked);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
+    }
+
+    @Operation(summary = "비밀번호 재설정 이메일 인증 확인", description = "비밀번호 재설정 전에 이메일 인증했는지 확인")
+    @PostMapping("/password-reset/verify")
+    public ResponseEntity<ApiResponse<PasswordResetVerifyResponse>> verifyPasswordReset(
+            @RequestBody @Valid PasswordResetVerifyRequest request) {
+
+        PasswordResetVerifyResponse response = authService.verifyPasswordReset(request);
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+    }
+
+    @Operation(summary = "비밀번호 재설정", description = "로그인하지 않은 사용자의 비밀번호 재설정")
+    @PostMapping("/password-reset")
+    public ResponseEntity<ApiResponse<Void>> resetPassword(
+            @RequestBody @Valid ResetPasswordRequest request) {
+
+        authService.resetPassword(request);
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(null));
     }
 }

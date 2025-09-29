@@ -85,7 +85,7 @@ public class UserController {
     }
 
     @Operation(summary = "마이페이지 비밀번호 변경", description = "현재 로그인한 사용자의 비밀번호 변경")
-    @PatchMapping("/change-password")
+    @PatchMapping("/password")
     public ResponseEntity<ApiResponse<Void>> changePassword(
             @AuthenticationPrincipal Long userId,
             @RequestBody @Valid ChangePasswordRequest request) {
