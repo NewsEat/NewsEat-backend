@@ -6,15 +6,15 @@ import com.company.newseat.global.exception.code.status.ErrorStatus;
 import com.company.newseat.global.exception.handler.NewsHandler;
 import com.company.newseat.global.exception.handler.UserHandler;
 import com.company.newseat.news.domain.News;
+import com.company.newseat.news.domain.type.Sentiment;
 import com.company.newseat.news.dto.response.*;
+import com.company.newseat.news.infrastructure.GptClient;
 import com.company.newseat.news.repository.NewsRepository;
-import com.company.newseat.news.util.NewsSummaryPromptProvider;
 import com.company.newseat.user.domain.User;
 import com.company.newseat.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.ai.openai.OpenAiChatModel;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,9 +25,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class NewsService {
 
-    private final OpenAiChatModel openAiChatModel;
+    private final GptClient gptClient;
     private final NewsRepository newsRepository;
-    private final NewsSummaryPromptProvider promptProvider;
     private final BookmarkRepository bookmarkRepository;
     private final UserRepository userRepository;
 
@@ -40,21 +39,12 @@ public class NewsService {
                 .orElseThrow(() -> new NewsHandler(ErrorStatus.NEWS_NOT_FOUND));
 
         String title = news.getTitle();
-        String sentiment = news.getSentiment().getDescription();
-
-        String newsContent = news.getContent();
-        String summaryText = generateSummaryFromContent(newsContent);
+        String sentiment = Optional.ofNullable(news.getSentiment())
+                .map(Sentiment::getDescription)
+                .orElse("감정 정보 없음");
+        String summaryText = gptClient.generateSummary(news.getContent());
 
         return NewsSummaryResponse.of(title, sentiment, summaryText);
-    }
-
-    private String generateSummaryFromContent(String content) {
-        String promptText = promptProvider.createPrompt(content);
-        try {
-            return openAiChatModel.call(promptText);
-        } catch (Exception e) {
-            throw new NewsHandler(ErrorStatus.SUMMARY_GENERATION_FAILED);
-        }
     }
 
     /**
