@@ -23,10 +23,10 @@ public class GptClient {
     }
 
     /**
-     * 뉴스 본문 생성 (summary를 바탕으로 가상의 뉴스 본문 생성)
+     * 뉴스 본문 생성 (title, summary를 바탕으로 가상의 뉴스 본문 생성)
      */
-    public String generateNewsContent(String summary) {
-        String prompt = promptProvider.createContentPrompt(summary);
+    public String generateNewsContent(String title, String summary) {
+        String prompt = promptProvider.createContentPrompt(title, summary);
         return callModel(prompt, ErrorStatus.CONTENT_GENERATION_FAILED);
     }
 
