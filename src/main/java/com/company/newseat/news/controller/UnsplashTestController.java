@@ -12,18 +12,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Unsplash Image API", description = "무료 이미지 검색 API 작동 테스트")
+@Tag(name = "Unsplash Image API Test", description = "Unsplash 이미지 검색 API 연동 테스트")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/test/unsplash")
-public class UnsplashController {
+public class UnsplashTestController {
 
     private final UnsplashApiClient unsplashApiClient;
 
-    @Operation(summary = "무료 이미지 호출 API", description = "키워드 기반 Unsplash API 호출 테스트")
+    @Operation(summary = "이미지 검색 API 호출", description = "키워드 기반 Unsplash API 호출 테스트")
     @GetMapping
-    public ResponseEntity<ApiResponse<String>>  getImage(@RequestParam String keyword) {
+    public ResponseEntity<ApiResponse<String>> getImage(@RequestParam String keyword) {
         String imageUrl = unsplashApiClient.getImageUrl(keyword);
         if (imageUrl == null){
             return ResponseEntity.ok(ApiResponse.onFailure("404", "이미지를 찾을 수 없습니다.", null));
