@@ -26,10 +26,11 @@ public class NaverNewsApiClient {
     /**
      * 네이버 뉴스 검색 API 에서 뉴스 내용 불러오기
      */
-    public List<NaverNews> getNewsList(String categoryQuery, int count) {
+    public List<NaverNews> getNewsList(String categoryQuery, int count, int start) {
         String url = UriComponentsBuilder.fromHttpUrl("https://openapi.naver.com/v1/search/news.json")
                 .queryParam("query", categoryQuery)
                 .queryParam("display", count)
+                .queryParam("start", start)
                 .queryParam("sort", "date")
                 .toUriString();
 
