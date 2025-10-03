@@ -10,6 +10,8 @@ import com.company.newseat.news.domain.type.Sentiment;
 import com.company.newseat.news.dto.response.*;
 import com.company.newseat.news.infrastructure.GptClient;
 import com.company.newseat.news.repository.NewsRepository;
+import com.company.newseat.newslog.domain.NewsLog;
+import com.company.newseat.newslog.repository.NewsLogRepository;
 import com.company.newseat.user.domain.User;
 import com.company.newseat.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class NewsService {
 
     private final GptClient gptClient;
     private final NewsRepository newsRepository;
+    private final NewsLogRepository newsLogRepository;
     private final BookmarkRepository bookmarkRepository;
     private final UserRepository userRepository;
 
@@ -90,6 +93,9 @@ public class NewsService {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+
+        NewsLog newsLog = NewsLog.builder().user(user).news(news).build();
+        newsLogRepository.save(newsLog);
 
         Optional<Bookmark> bookmarkOpt = bookmarkRepository.findByUserAndNewsId(user, newsId);
         Long bookmarkId = bookmarkOpt.map(Bookmark::getBookmarkId).orElse(null);
