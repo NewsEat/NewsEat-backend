@@ -19,8 +19,9 @@ public class SentimentService {
     private final NewsRepository newsRepository;
     private final SentimentApiClient sentimentApiClient;
 
-    public void updateEmptySentiments() {
+    public int updateEmptySentiments() {
         List<News> newsList = newsRepository.findBySentimentIsNull(PageRequest.of(0, 50));
+        int updatedCount = 0;
 
         for (News news : newsList) {
             try {
@@ -34,10 +35,12 @@ public class SentimentService {
                     Sentiment sentiment = Sentiment.fromString(sentimentStr);
                     news.updateSentiment(sentiment);
                     newsRepository.save(news);
+                    updatedCount++;
                 }
             } catch (Exception e) {
                 log.warn("뉴스 ID [{}] 감정 분석 실패: {}", news.getNewsId(), e.getMessage(), e);
             }
         }
+        return updatedCount;
     }
 }
