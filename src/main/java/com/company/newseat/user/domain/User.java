@@ -81,4 +81,8 @@ public class User {
     public void disableDetoxMode() {
         this.isDetox = false;
     }
+
+    public void changePassword(String password){
+        this.password = password;
+    }
 }

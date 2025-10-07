@@ -1,13 +1,10 @@
 package com.company.newseat.auth.application;
 
-import com.company.newseat.auth.dto.request.SendEmailCodeRequest;
-import com.company.newseat.auth.dto.request.VerifyEmailCodeRequest;
+import com.company.newseat.auth.dto.request.*;
 import com.company.newseat.auth.dto.response.*;
 import com.company.newseat.auth.util.TokenProvider;
 import com.company.newseat.auth.dto.jwt.JwtUserDetails;
 import com.company.newseat.auth.dto.jwt.Tokens;
-import com.company.newseat.auth.dto.request.LoginRequest;
-import com.company.newseat.auth.dto.request.SignUpRequest;
 import com.company.newseat.category.domain.Category;
 import com.company.newseat.category.repository.CategoryRepository;
 import com.company.newseat.email.application.MailService;
@@ -177,5 +174,53 @@ public class AuthService {
 
         emailAuth.setIsChecked(true);
         return true;
+    }
+
+    /**
+     * 로그인한 사용자의 비밀번호 변경
+     */
+    @Transactional
+    public void changePassword(Long userId, ChangePasswordRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+
+        if (!request.password().equals(request.confirmPassword()))
+            throw new AuthHandler(ErrorStatus.PASSWORD_NOT_CORRECT);
+
+        user.changePassword(passwordEncoder.encode(request.password()));
+        userRepository.save(user);
+    }
+
+    /**
+     * 비밀번호 찾기용 이메일 인증 확인
+     */
+    @Transactional
+    public PasswordResetVerifyResponse verifyPasswordReset(PasswordResetVerifyRequest request){
+
+        EmailAuth emailAuth = emailAuthRepository.findById(request.emailAuthId())
+                .orElseThrow(() -> new AuthHandler(ErrorStatus.EMAIL_AUTH_NOT_FOUND));
+
+        if (!emailAuthRepository.existsByEmailAuthIdAndPurposeAndIsChecked(request.emailAuthId(), Purpose.FIND_PW, BooleanType.T))
+            throw new AuthHandler(ErrorStatus.EMAIL_NOT_VERIFIED);
+
+        User user = userRepository.findByEmail(emailAuth.getEmail())
+                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+
+        return PasswordResetVerifyResponse.of(user.getUserId());
+    }
+
+    /**
+     * 로그인하지 않은 사용자의 비밀번호 재설정
+     */
+    @Transactional
+    public void resetPassword(ResetPasswordRequest request) {
+        User user = userRepository.findById(request.userId())
+                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+
+        if (!request.password().equals(request.confirmPassword()))
+            throw new AuthHandler(ErrorStatus.PASSWORD_NOT_CORRECT);
+
+        user.changePassword(passwordEncoder.encode(request.password()));
+        userRepository.save(user);
     }
 }
