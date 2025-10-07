@@ -19,4 +19,7 @@ public interface NewsRepository extends JpaRepository<News, Long>, NewsRepositor
     boolean existsByTitle(String title);
 
     List<News> findBySentimentIsNull(Pageable pageable);
+
+    @Query(value = "SELECT * FROM news WHERE id NOT IN :excludedIds ORDER BY RAND() LIMIT :limit", nativeQuery = true)
+    List<News> findRandomNewsExcludingIds(@Param("excludedIds") List<Long> excludedIds, @Param("limit") int limit);
 }
