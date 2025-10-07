@@ -4,6 +4,7 @@ import java.util.List;
 
 public record MypageProfileResponse(
         String nickname,
-        List<String> categories
+        List<String> categories,
+        String email
 ) {
 }

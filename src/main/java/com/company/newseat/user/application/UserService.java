@@ -48,7 +48,7 @@ public class UserService {
                 .map(pref -> pref.getCategory().getName())
                 .toList();
 
-        return new MypageProfileResponse(user.getNickname(), categories);
+        return new MypageProfileResponse(user.getNickname(), categories, user.getEmail());
     }
 
     /**
