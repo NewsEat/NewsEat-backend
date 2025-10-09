@@ -46,7 +46,7 @@ public class HomeController {
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
 
-    @Operation(summary = "홈 화면 최신 뉴스 조회", description = "최신 뉴스 5개 조회")
+    @Operation(summary = "홈 화면 최신 뉴스 조회 (사용x)", description = "최신 뉴스 5개 조회")
     @GetMapping("/latest-news")
     public ResponseEntity<ApiResponse<HomeNewsListResponse>> getHomeNews(
             @AuthenticationPrincipal Long userId) {
@@ -66,13 +66,13 @@ public class HomeController {
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
 
-//    @Operation(summary = "홈 화면 추천 뉴스 조회", description = "유저의 최근 뉴스 로그를 기반으로 Flask 추천 API 호출 후 추천 뉴스 5개 반환 (로그 없을 시 최신 뉴스 5개)")
-//    @GetMapping("/v2/latest-news")
-//    public ResponseEntity<ApiResponse<SuggestedNewsListResponse>> getHomeRecommendedNews(
-//            @AuthenticationPrincipal Long userId) {
-//
-//        SuggestedNewsListResponse response = newsRecommendService.getHomeRecommendedNews(userId);
-//
-//        return ResponseEntity.ok(ApiResponse.onSuccess(response));
-//    }
+    @Operation(summary = "홈 화면 추천 뉴스 조회", description = "유저의 최근 뉴스 로그를 기반으로 Flask 추천 API 호출 후 추천 뉴스 5개 반환")
+    @GetMapping("/recommendation")
+    public ResponseEntity<ApiResponse<HomeNewsListResponse>> getHomeRecommendedNews(
+            @AuthenticationPrincipal Long userId) {
+
+        HomeNewsListResponse response = newsRecommendService.getHomeRecommendedNews(userId);
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+    }
 }

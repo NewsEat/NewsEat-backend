@@ -2,7 +2,9 @@ package com.company.newseat.news.application;
 
 import com.company.newseat.global.exception.code.status.ErrorStatus;
 import com.company.newseat.global.exception.handler.UserHandler;
+import com.company.newseat.home.dto.response.HomeNewsListResponse;
 import com.company.newseat.news.domain.News;
+import com.company.newseat.news.domain.type.Sentiment;
 import com.company.newseat.news.dto.response.NewsItemResponse;
 import com.company.newseat.news.dto.response.SuggestedNewsListResponse;
 import com.company.newseat.news.infrastructure.RecommendApiClient;
@@ -11,11 +13,16 @@ import com.company.newseat.newslog.repository.NewsLogRepository;
 import com.company.newseat.user.domain.User;
 import com.company.newseat.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class NewsRecommendService {
@@ -25,44 +32,27 @@ public class NewsRecommendService {
     private final NewsLogRepository newsLogRepository;
     private final RecommendApiClient recommendApiClient;
 
-//    public SuggestedNewsListResponse getSuggestedNewsFromFlask(Long userId, Long newsId) {
-//        List<Long> recommendedIds = recommendApiClient.getRecommendedIds(newsId);
-//
-//        List<News> newsList = newsRepository.findAllById(recommendedIds);
-//
-//        if (newsList.size() < 5) {
-//            int remaining = 5 - newsList.size();
-//
-//            List<News> additionalNews = newsRepository.findRandomNewsExcludingIds(
-//                    recommendedIds, remaining
-//            );
-//            newsList.addAll(additionalNews);
-//        }
-//
-//        List<NewsItemResponse> dtoList = newsList.stream()
-//                .map(NewsItemResponse::from)
-//                .toList();
-//
-//        return SuggestedNewsListResponse.of(dtoList);
-//    }
-
     private static final int TARGET_COUNT = 5;
 
     public SuggestedNewsListResponse getSuggestedNewsFromFlask(Long newsId) {
-        List<Long> recommendedIds = recommendApiClient.getRecommendedIds(newsId);
+        List<Long> recommendedIds;
+        try {
+            recommendedIds = recommendApiClient.getRecommendedIds(newsId);
+        } catch (Exception e) {
+            log.warn("Flask 추천 API 호출 실패: {}, fallback to 랜덤 뉴스", e.getMessage());
+            recommendedIds = List.of();
+        }
 
         if (recommendedIds.size() > TARGET_COUNT) {
             recommendedIds = recommendedIds.subList(0, TARGET_COUNT);
         }
 
-        List<News> newsList = newsRepository.findAllById(recommendedIds);
+        List<News> newsList = new ArrayList<>(newsRepository.findAllById(recommendedIds));
 
         if (newsList.size() < TARGET_COUNT) {
             int remaining = TARGET_COUNT - newsList.size();
-            List<News> additionalNews = newsRepository.findRandomNewsExcludingIds(
-                    recommendedIds.isEmpty() ? List.of(-1L) : recommendedIds,
-                    remaining
-            );
+            List<Long> excludedIds = recommendedIds.isEmpty() ? List.of(-1L) : recommendedIds;
+            List<News> additionalNews = new ArrayList<>(newsRepository.findRandomNewsExcludingIds(excludedIds, remaining));
             newsList.addAll(additionalNews);
         }
 
@@ -93,7 +83,7 @@ public class NewsRecommendService {
     /**
      * 홈화면 추천 뉴스
      */
-    public SuggestedNewsListResponse getHomeRecommendedNews(Long userId) {
+    public HomeNewsListResponse getHomeRecommendedNews(Long userId) {
 
         User user = userRepository.findByIdWithPreferencesAndCategory(userId)
                 .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
@@ -101,22 +91,33 @@ public class NewsRecommendService {
         boolean isDetox = user.getIsDetox();
 
         List<Long> recentNewsIds = newsLogRepository.findRecentNewsIdsByUserId(userId, 5);
-
         if (recentNewsIds.isEmpty()) {
             return fallbackToLatestNews(isDetox);
         }
 
-        List<Long> recommendedIds = recommendApiClient.getRecommendedIdsForUser(recentNewsIds);
+        List<Long> recommendedIds;
+        try {
+            recommendedIds = recommendApiClient.getRecommendedIdsForUser(recentNewsIds);
+        } catch (Exception e) {
+            log.warn("Flask 추천 API 호출 실패: {}, fallback to latest news", e.getMessage());
+            return fallbackToLatestNews(isDetox);
+        }
 
         if (recommendedIds.size() > 10) {
             recommendedIds = recommendedIds.subList(0, 10);
         }
 
-        List<News> newsList = newsRepository.findAllById(recommendedIds);
+        Map<Long, News> newsMap = newsRepository.findAllById(recommendedIds).stream()
+                .collect(Collectors.toMap(News::getNewsId, n -> n));
+
+        List<News> newsList = recommendedIds.stream()
+                .map(newsMap::get)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
 
         if (isDetox) {
             newsList = newsList.stream()
-                    .filter(news -> news.getSentiment() != null && news.getSentiment().equals("positive"))
+                    .filter(news -> news.getSentiment() != null && news.getSentiment().equals(Sentiment.POSITIVE))
                     .toList();
         }
 
@@ -134,10 +135,10 @@ public class NewsRecommendService {
 
         List<NewsItemResponse> finalList = padWithDummyNews(dtoList, TARGET_COUNT);
 
-        return SuggestedNewsListResponse.of(finalList);
+        return HomeNewsListResponse.of(finalList);
     }
 
-    private SuggestedNewsListResponse fallbackToLatestNews(boolean isDetox) {
+    private HomeNewsListResponse fallbackToLatestNews(boolean isDetox) {
         List<NewsItemResponse> newsList;
 
         if (isDetox) {
@@ -146,7 +147,7 @@ public class NewsRecommendService {
             newsList = newsRepository.findLatestNews(TARGET_COUNT);
         }
 
-        return SuggestedNewsListResponse.of(
+        return HomeNewsListResponse.of(
                 padWithDummyNews(newsList, TARGET_COUNT)
         );
     }

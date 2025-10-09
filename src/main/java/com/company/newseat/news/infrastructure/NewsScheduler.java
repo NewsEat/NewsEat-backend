@@ -15,13 +15,14 @@ public class NewsScheduler {
 
     private final NewsSaveService newsService;
 
-    @Scheduled(cron = "0 00 02 * * ?")
+    //@Scheduled(cron = "0 00 02 * * ?")
+    @Scheduled(cron = "0 0 0/2 * * ?") //2시간마다
     public void fetchDailyNews() {
         LocalDateTime startTime = LocalDateTime.now();
         log.info("뉴스 스케줄러 시작: {}", startTime);
 
         try {
-            newsService.fetchAndSaveDailyNews(2);
+            newsService.fetchAndSaveDailyNews(1);
         } catch (Exception e) {
             log.error("뉴스 스케줄러 실행 중 오류 발생: {}", e.getMessage(), e);
         }
