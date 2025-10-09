@@ -47,7 +47,7 @@ public class NewsInitializer implements ApplicationRunner {
                             .publisher("뉴스발행사 " + (char) ('A' + i - 1))
                             .sentiment(i % 2 == 0 ? Sentiment.POSITIVE : Sentiment.NEGATIVE)
                             .published_at("2025-08-08 10:0" + i + ":00")
-                            .imgUrl("https://raw.githubusercontent.com/NewsEat/assets/refs/heads/main/news_eat_logo.png")
+                            .imgUrl("https://raw.githubusercontent.com/NewsEat/assets/refs/heads/main/notavailable_image.png")
                             .category(category)
                             .build();
                     newsList.add(news);

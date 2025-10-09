@@ -1,7 +1,11 @@
 package com.company.newseat.news.dto.response;
 
+import com.company.newseat.category.domain.Category;
 import com.company.newseat.global.util.DateUtil;
 import com.company.newseat.news.domain.News;
+import com.company.newseat.news.domain.type.Sentiment;
+
+import java.util.Optional;
 
 public record NewsDetailResponse(
         Long newsId,
@@ -20,6 +24,14 @@ public record NewsDetailResponse(
         String formattedPublishedAt = DateUtil.formatDate(news.getPublished_at());
         boolean isBookmarked = bookmarkId != null;
 
+        String sentiment = Optional.ofNullable(news.getSentiment())
+                .map(Sentiment::getDescription)
+                .orElse("감정 정보 없음");
+
+        String category = Optional.ofNullable(news.getCategory())
+                .map(Category::getName)
+                .orElse("카테고리 없음");
+
         return new NewsDetailResponse(
                 news.getNewsId(),
                 news.getTitle(),
@@ -27,8 +39,8 @@ public record NewsDetailResponse(
                 news.getImgUrl(),
                 news.getPublisher(),
                 formattedPublishedAt,
-                news.getCategory().getName(),
-                news.getSentiment().getDescription(),
+                sentiment,
+                category,
                 isBookmarked,
                 bookmarkId
         );

@@ -5,6 +5,7 @@ import com.company.newseat.news.domain.News;
 import com.company.newseat.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,4 +29,9 @@ public class NewsLog extends BaseTimeEntity {
     @JoinColumn(name = "news_id")
     private News news;
 
+    @Builder
+    public NewsLog(User user, News news) {
+        this.user = user;
+        this.news = news;
+    }
 }

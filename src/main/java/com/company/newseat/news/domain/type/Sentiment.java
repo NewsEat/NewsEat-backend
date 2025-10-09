@@ -14,4 +14,13 @@ public enum Sentiment {
     public String getDescription() {
         return description;
     }
+
+    public static Sentiment fromString(String value) {
+        return switch (value.toLowerCase()) {
+            case "positive" -> POSITIVE;
+            case "negative" -> NEGATIVE;
+            case "neutral"  -> NEUTRAL;
+            default -> throw new IllegalArgumentException("Unknown Value: " + value);
+        };
+    }
 }

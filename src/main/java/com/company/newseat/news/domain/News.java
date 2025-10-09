@@ -42,4 +42,10 @@ public class News extends BaseTimeEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    /**
+     * 감정 태그 업데이트
+     */
+    public void updateSentiment(Sentiment sentiment) {
+        this.sentiment = sentiment;
+    }
 }

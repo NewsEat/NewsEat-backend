@@ -1,6 +1,7 @@
 package com.company.newseat.news.controller;
 
 import com.company.newseat.global.response.ApiResponse;
+import com.company.newseat.news.application.NewsRecommendService;
 import com.company.newseat.news.application.NewsService;
 import com.company.newseat.news.dto.response.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class NewsController {
 
     private final NewsService newsService;
+    private final NewsRecommendService newsRecommendService;
 
     @Operation(summary = "뉴스 요약", description = "뉴스 ID를 받아 AI를 활용해 뉴스 요약 생성")
     @PostMapping("/summary/{newsId}")
@@ -76,6 +78,17 @@ public class NewsController {
             @PathVariable Long newsId){
 
         SuggestedNewsListResponse response = newsService.getSuggestedNews(newsId);
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+    }
+
+    @Operation(summary = "뉴스 하단 제안 뉴스 조회", description = "제안 뉴스 5개 조회 (FLASK API 연동)")
+    @GetMapping("/{newsId}/recommendations/v2")
+    public ResponseEntity<ApiResponse<SuggestedNewsListResponse>> getSuggestedNewsV2(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long newsId){
+
+        SuggestedNewsListResponse response = newsRecommendService.getSuggestedNewsFromFlask(newsId);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }

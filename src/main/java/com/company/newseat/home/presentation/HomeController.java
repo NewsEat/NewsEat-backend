@@ -6,6 +6,8 @@ import com.company.newseat.home.dto.response.HomeNewsListResponse;
 import com.company.newseat.home.dto.response.HomeNewsSectionResponse;
 import com.company.newseat.home.dto.response.HomePreferNewsListResponse;
 import com.company.newseat.home.dto.response.PositiveNewsListResponse;
+import com.company.newseat.news.application.NewsRecommendService;
+import com.company.newseat.news.dto.response.SuggestedNewsListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class HomeController {
 
     private final HomeService homeService;
+    private final NewsRecommendService newsRecommendService;
 
     @Operation(summary = "홈 화면 긍정 뉴스 섹션 조회", description = "사용자 선호 카테고리 + 전체 카테고리에서 긍정 뉴스 5개 조회")
     @GetMapping("/positive-news")
@@ -43,7 +46,7 @@ public class HomeController {
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
 
-    @Operation(summary = "홈 화면 최신 뉴스 조회", description = "최신 뉴스 5개 조회")
+    @Operation(summary = "홈 화면 최신 뉴스 조회 (사용x)", description = "최신 뉴스 5개 조회")
     @GetMapping("/latest-news")
     public ResponseEntity<ApiResponse<HomeNewsListResponse>> getHomeNews(
             @AuthenticationPrincipal Long userId) {
@@ -59,6 +62,16 @@ public class HomeController {
             @AuthenticationPrincipal Long userId) {
 
         HomeNewsSectionResponse response = homeService.getHomeNewsSections(userId);
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+    }
+
+    @Operation(summary = "홈 화면 추천 뉴스 조회", description = "유저의 최근 뉴스 로그를 기반으로 Flask 추천 API 호출 후 추천 뉴스 5개 반환")
+    @GetMapping("/recommendation")
+    public ResponseEntity<ApiResponse<HomeNewsListResponse>> getHomeRecommendedNews(
+            @AuthenticationPrincipal Long userId) {
+
+        HomeNewsListResponse response = newsRecommendService.getHomeRecommendedNews(userId);
 
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }

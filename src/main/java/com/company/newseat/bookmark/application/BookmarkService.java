@@ -11,17 +11,18 @@ import com.company.newseat.global.exception.handler.BookmarkHandler;
 import com.company.newseat.global.exception.handler.NewsHandler;
 import com.company.newseat.global.exception.handler.UserHandler;
 import com.company.newseat.news.domain.News;
+import com.company.newseat.news.domain.type.Sentiment;
+import com.company.newseat.news.infrastructure.GptClient;
 import com.company.newseat.news.repository.NewsRepository;
-import com.company.newseat.news.util.NewsSummaryPromptProvider;
 import com.company.newseat.user.domain.User;
 import com.company.newseat.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -32,8 +33,7 @@ public class BookmarkService {
     private final BookmarkRepository bookmarkRepository;
     private final NewsRepository newsRepository;
     private final UserRepository userRepository;
-    private final OpenAiChatModel openAiChatModel;
-    private final NewsSummaryPromptProvider promptProvider;
+    private final GptClient gptClient;
     /**
      * 사용자가 특정 뉴스를 북마크로 저장
      * (원본 뉴스 데이터를 스냅샷 형태로 Bookmark 엔티티에 저장)
@@ -110,20 +110,11 @@ public class BookmarkService {
                 .orElseThrow(() -> new NewsHandler(ErrorStatus.NEWS_NOT_FOUND));
 
         String title = bookmark.getTitle();
-        String sentiment = bookmark.getSentiment().getDescription();
-
-        String newsContent = bookmark.getContent();
-        String summaryText = generateSummaryFromContent(newsContent);
+        String sentiment = Optional.ofNullable(bookmark.getSentiment())
+                .map(Sentiment::getDescription)
+                .orElse("감정 정보 없음");
+        String summaryText = gptClient.generateSummary(bookmark.getContent());
 
         return BookmarkSummaryResponse.of(title, sentiment, summaryText);
-    }
-
-    private String generateSummaryFromContent(String content) {
-        String promptText = promptProvider.createPrompt(content);
-        try {
-            return openAiChatModel.call(promptText);
-        } catch (Exception e) {
-            throw new NewsHandler(ErrorStatus.SUMMARY_GENERATION_FAILED);
-        }
     }
 }

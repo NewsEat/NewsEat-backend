@@ -52,10 +52,13 @@ public enum ErrorStatus implements BaseErrorCode {
     // News
     NEWS_NOT_FOUND(NOT_FOUND, "NEWS4004", "해당 뉴스를 찾을 수 없습니다."),
 
-    SUMMARY_GENERATION_FAILED(INTERNAL_SERVER_ERROR, "NEWS5001", "뉴스 요약 생성에 실패했습니다."),
     SUMMARY_REQUEST_INVALID(BAD_REQUEST, "NEWS4001", "뉴스 요약 요청 데이터가 유효하지 않습니다."),
     SUMMARY_CONTENT_EMPTY(BAD_REQUEST, "NEWS4003", "뉴스 내용이 비어 있습니다."),
-    SUMMARY_SERVICE_UNAVAILABLE(SERVICE_UNAVAILABLE, "NEWS5031", "뉴스 요약 서비스를 일시적으로 사용할 수 없습니다.");
+    SUMMARY_SERVICE_UNAVAILABLE(SERVICE_UNAVAILABLE, "NEWS5031", "뉴스 요약 서비스를 일시적으로 사용할 수 없습니다."),
+
+    SUMMARY_GENERATION_FAILED(INTERNAL_SERVER_ERROR, "NEWS5001", "뉴스 요약 생성에 실패했습니다."),
+    CONTENT_GENERATION_FAILED(INTERNAL_SERVER_ERROR, "NEWS5002", "뉴스 본문 생성에 실패했습니다."),
+    IMAGE_KEYWORD_GENERATION_FAILED(INTERNAL_SERVER_ERROR, "NEWS5003", "뉴스 이미지 키워드 생성에 실패했습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
