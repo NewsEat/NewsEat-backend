@@ -2,6 +2,7 @@ package com.company.newseat.news.dto.response;
 
 import com.company.newseat.global.util.DateUtil;
 import com.company.newseat.news.domain.News;
+import org.springframework.web.util.HtmlUtils;
 
 public record SearchNewsResponse(
         Long newsId,
@@ -16,7 +17,7 @@ public record SearchNewsResponse(
                 news.getNewsId(),
                 news.getImgUrl(),
                 news.getPublisher(),
-                news.getTitle(),
+                HtmlUtils.htmlUnescape(news.getTitle()),
                 formattedPublishedAt
         );
     }
