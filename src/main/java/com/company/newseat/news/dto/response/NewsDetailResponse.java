@@ -4,6 +4,7 @@ import com.company.newseat.category.domain.Category;
 import com.company.newseat.global.util.DateUtil;
 import com.company.newseat.news.domain.News;
 import com.company.newseat.news.domain.type.Sentiment;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.Optional;
 
@@ -34,8 +35,8 @@ public record NewsDetailResponse(
 
         return new NewsDetailResponse(
                 news.getNewsId(),
-                news.getTitle(),
-                news.getContent(),
+                HtmlUtils.htmlUnescape(news.getTitle()),
+                HtmlUtils.htmlUnescape(news.getContent()),
                 news.getImgUrl(),
                 news.getPublisher(),
                 formattedPublishedAt,

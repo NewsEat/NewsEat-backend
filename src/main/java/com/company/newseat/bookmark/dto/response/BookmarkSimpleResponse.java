@@ -2,6 +2,7 @@ package com.company.newseat.bookmark.dto.response;
 
 import com.company.newseat.bookmark.domain.Bookmark;
 import com.company.newseat.global.util.DateUtil;
+import org.springframework.web.util.HtmlUtils;
 
 public record BookmarkSimpleResponse(
         Long bookmarkId,
@@ -16,7 +17,7 @@ public record BookmarkSimpleResponse(
 
         return new BookmarkSimpleResponse(
                 bookmark.getBookmarkId(),
-                bookmark.getTitle(),
+                HtmlUtils.htmlUnescape(bookmark.getTitle()),
                 bookmark.getCategory(),
                 bookmark.getImgUrl(),
                 formattedPublishedAt,

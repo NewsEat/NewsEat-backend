@@ -3,6 +3,7 @@ package com.company.newseat.bookmark.dto.response;
 import com.company.newseat.bookmark.domain.Bookmark;
 import com.company.newseat.global.util.DateUtil;
 import com.company.newseat.news.domain.type.Sentiment;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.Optional;
 
@@ -29,8 +30,8 @@ public record BookmarkResponse(
 
         return new BookmarkResponse(
                 bookmark.getBookmarkId(),
-                bookmark.getTitle(),
-                bookmark.getContent(),
+                HtmlUtils.htmlUnescape(bookmark.getTitle()),
+                HtmlUtils.htmlUnescape(bookmark.getContent()),
                 bookmark.getPublisher(),
                 sentiment,
                 formattedPublishedAt,
