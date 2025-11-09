@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -28,6 +30,8 @@ import java.util.Optional;
 @RestControllerAdvice(annotations = {RestController.class})
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
+    private static final Logger errorLogger = LoggerFactory.getLogger("ErrorLogger");
+
     @ExceptionHandler
     public ResponseEntity<Object> validation(ConstraintViolationException e, WebRequest request) {
         String errorMessage = e.getConstraintViolations().stream()
@@ -36,6 +40,9 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                 .orElseThrow(() -> new RuntimeException("ConstraintViolationException 추출 도중 에러 발생"));
 
         ErrorStatus errorStatus = getErrorStatusByMessage(errorMessage);
+
+        log.warn("Validation error: {}", errorMessage);
+
         return handleExceptionInternalConstraint(e, errorStatus, HttpHeaders.EMPTY, request);
     }
 
@@ -62,12 +69,14 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                     errors.merge(fieldName, errorMessage, (existingErrorMessage, newErrorMessage) -> existingErrorMessage + ", " + newErrorMessage);
                 });
 
+        log.warn("Method argument validation failed: {}", errors);
+
         return handleExceptionInternalArgs(e,HttpHeaders.EMPTY,ErrorStatus.valueOf("_BAD_REQUEST"),request,errors);
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> exception(Exception e, WebRequest request) {
-        e.printStackTrace();
+        errorLogger.error("Unexpected Internal Server Error: {}", e.getMessage(), e);
 
         return handleExceptionInternalFalse(e, ErrorStatus._INTERNAL_SERVER_ERROR, HttpHeaders.EMPTY, ErrorStatus._INTERNAL_SERVER_ERROR.getHttpStatus(),request, e.getMessage());
     }
@@ -75,6 +84,11 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = GeneralException.class)
     public ResponseEntity onThrowException(GeneralException generalException, HttpServletRequest request) {
         ErrorReasonDTO errorReasonHttpStatus = generalException.getErrorReasonHttpStatus();
+
+        log.error("GeneralException: [{}] {}",
+                errorReasonHttpStatus.getCode(),
+                errorReasonHttpStatus.getMessage());
+
         return handleExceptionInternal(generalException,errorReasonHttpStatus,null,request);
     }
 
